@@ -1,0 +1,23 @@
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+[core]
+	editor = vim
+[alias]
+  st = status
+  ci = commit
+  br = branch
+  co = checkout
+  df = diff
+  lg = log -p
+  who = shortlog -s --
+[user]
+  name = "Adam Bachman"
+  email = "adam.bachman@gmail.com"
+[push]
+	default = matching
+[gui]
+	fontui = -family terminus -size 9 -weight bold -slant roman -underline 0 -overstrike 0
+	fontdiff = -family liberation.sans -size 9 -weight normal -slant roman -underline 0 -overstrike 0

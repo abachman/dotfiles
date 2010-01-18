@@ -1,0 +1,69 @@
+deflogin on
+autodetach on
+allpartial off                  # Refresh entire screen on window change
+altscreen on
+startup_message off
+defflow auto
+shell -bash
+activity "active: %n (%t) [%w:%s]"
+bell "bell: %n (%t) [%w:%s]^G"
+vbell off
+vbell_msg "[[[ ding ]]]"
+defscrollback 10000
+nonblock on
+msgwait 2
+
+term xterm-color
+termcapinfo xterm-color|rxvt ti@:te@
+
+hardstatus alwayslastline                                        
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B}%Y-%m-%d %{W}%c %{g}]'
+
+# vim color scheme helpers
+attrcolor b ".I"
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+defbce "on"
+term screen-256color-bce
+
+# F1 and F2 to move one screen forward or backward
+bindkey -k f1 prev
+bindkey -k f2 next
+
+# Shift-PgUp and Shift-PgDn work like in normal terminal.
+bindkey "^[[5;2~" eval "copy" "stuff ^u"
+bindkey -m "^[[5;2~" stuff ^u
+bindkey -m "^[[6;2~" stuff ^d
+
+# Split screen control
+bind + resize +3
+bind - resize -3
+bind = resize =
+bind _ resize max  
+bindkey -k k5 split
+bindkey -k k6 remove
+bind o eval "split" "focus down" "screen" "resize =" # !
+# Use Vim-like up and down for split windows
+bind j focus down
+bind k focus up
+bind ^j focus down
+bind ^k focus up
+
+# Make the xterm scroller work in screen, also works
+# with mouse scrollwheel
+termcapinfo xterm*|rxvt* ti@:te@
+termcapinfo xterm*|rxvt* 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007' 
+termcapinfo xterm*|rxvt*|kterm*|Eterm* hs:ts=\E]0;:fs=\007:ds=\E]0;\007
+termcapinfo xterm*|linux*|rxvt*|Eterm* OP
+termcap  xterm|rxvt hs@:cs=\E[%i%d;%dr:im=\E[4h:ei=\E[4l
+terminfo xterm|rxvt hs@:cs=\E[%i%p1%d;%p2%dr:im=\E[4h:ei=\E[4l
+termcapinfo  xterm*|rxvt* Z0=\E[?3h:Z1=\E[?3l:is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l
+termcapinfo xterm* OL=100
+termcapinfo xterm|rxvt 'VR=\E[?5h:VN=\E[?5l'
+termcapinfo xterm|rxvt 'k1=\E[11~:k2=\E[12~:k3=\E[13~:k4=\E[14~'
+termcapinfo xterm|rxvt 'kh=\EOH:kI=\E[2~:kD=\E[3~:kH=\EOF:kP=\E[5~:kN=\E[6~'
+termcapinfo xterm|rxvt 'hs:ts=\E]2;:fs=\007:ds=\E]2;screen\007'
+termcapinfo xterm|rxvt 'vi=\E[?25l:ve=\E[34h\E[?25h:vs=\E[34l'
+termcapinfo xterm|rxvt 'XC=K%,%\E(B,[\304,\\\\\326,]\334,{\344,|\366,}\374,~\337'
+termcapinfo xterm*|rxvt* be
+
+

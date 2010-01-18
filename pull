@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cp ~/.vimrc ./
+cp ~/.gvimrc ./
+cp ~/.screenrc ./
+cp ~/.gitconfig ./
+cp ~/.gemrc ./
+cp ~/.irbrc ./
+cp ~/.bashrc ./
+
