@@ -1,10 +1,10 @@
 #!/bin/bash
 
-cp ~/.vimrc ./
-cp ~/.gvimrc ./
-cp ~/.screenrc ./
-cp ~/.gitconfig ./
-cp ~/.gemrc ./
-cp ~/.irbrc ./
-cp ~/.bashrc ./
+rsync -v ~/.vimrc ./
+rsync -v ~/.gvimrc ./
+rsync -v ~/.screenrc ./
+rsync -v ~/.gitconfig ./
+rsync -v ~/.gemrc ./
+rsync -v ~/.irbrc ./
+rsync -v ~/.bashrc ./
 

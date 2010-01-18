@@ -64,8 +64,6 @@ let g:bufExplorerSortBy='number'
 " /home/adam/workspace/psl/trunk
 " /home/adam/workspace/windcurrent
 " /home/adam/workspace/xom_bac_v2/rails
-" /home/adam/workspace/alextom/chase_comparison_backend/branches/production
-" /home/adam/workspace/alextom/chase_comparison_backend/branches/jan_21_bug_fixes
 let g:fuzzy_roots=['/home/adam/workspace/psl/trunk']
 let g:fuzzy_ignore=".git/**,.svn/**,*.log,vendor/**,public/paperclip/**,public/images/**,public/flash/**,public/gallery/**,test/tmp/**,tmp/**,tmp/system/**,public/system,public/system/**"
 let g:fuzzy_ceiling=5000
