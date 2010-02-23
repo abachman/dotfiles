@@ -21,3 +21,5 @@
 [gui]
 	fontui = -family terminus -size 9 -weight bold -slant roman -underline 0 -overstrike 0
 	fontdiff = -family liberation.sans -size 9 -weight normal -slant roman -underline 0 -overstrike 0
+[github]
+	user = abachman

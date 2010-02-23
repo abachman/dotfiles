@@ -64,17 +64,21 @@ let g:bufExplorerSortBy='number'
 " /home/adam/workspace/psl/trunk
 " /home/adam/workspace/windcurrent
 " /home/adam/workspace/xom_bac_v2/rails
-let g:fuzzy_roots=['/home/adam/workspace/psl/trunk']
-let g:fuzzy_ignore=".git/**,.svn/**,*.log,vendor/**,public/paperclip/**,public/images/**,public/flash/**,public/gallery/**,test/tmp/**,tmp/**,tmp/system/**,public/system,public/system/**"
+" /home/adam/workspace/chase_ci
+" /home/adam/workspace/kpd/trunk/web
+" /home/adam/workspace/alextom/chase_comparison_backend/branches/tiny_mce_prototype
+let g:fuzzy_roots=['/home/adam/workspace/alextom/chase_comparison_backend/branches/tiny_mce_prototype']
+let g:fuzzy_ignore=".git/**,.svn/**,*.log,vendor/**,public/paperclip/**,public/images/**,public/flash/**,public/gallery/**,test/tmp/**,tmp/**,tmp/system/**,public/system,public/system/**,public/javascripts/tiny_mce/**"
 let g:fuzzy_ceiling=5000
 let g:fuzzy_matching_limit=10
 let g:fuzzy_enumerating_limit=8
+
 " snippetsEmu
 let g:snippetsEmu_key="<C-Tab>"
 
 " Key Mappings
 " reload vimrc
-nmap ,s :source ~/.vimrc<CR>
+nmap ,s :source ~/.vimrc<CR> :FuzzyFinderTextMateRefreshFiles<CR>
 nmap ,g :source ~/.gvimrc<CR>
 " Tab and Shift-Tab indent and unindent
 inoremap <S-Tab> <esc>mp<<2h`pa
@@ -102,8 +106,8 @@ imap <C-v> <esc>pa
 " Home/end like emacs and bash
 nmap <C-e> $
 imap <C-e> <End>
-nmap <C-a> 0
-imap <C-a> <Home>
+"nmap <C-a> 0
+"imap <C-a> <Home>
 " CTRL-S is Save
 noremap <C-s> :w<CR>
 inoremap <C-s> <esc>:w<CR>
@@ -129,6 +133,21 @@ nmap K <up>
 
 " Load matchit (% to bounce from do to end, etc.)
 runtime! macros/matchit.vim
+
+" Run a shell command in a new window
+command! -complete=file -nargs=+ Shell call s:RunShellCommand(<q-args>)
+function! s:RunShellCommand(cmdline)
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+  call setline(1,a:cmdline)
+  call setline(2,substitute(a:cmdline,'.','=','g'))
+  execute 'silent $read !'.escape(a:cmdline,'%#')
+  setlocal nomodifiable
+  1
+endfunction
+command! -complete=file -nargs=* Svn call s:RunShellCommand('svn '.<q-args>)
+
+
 
 map <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
@@ -188,12 +207,7 @@ endfunction
 
 function! s:MyRubySettings()
   set ai sw=2 sts=2 et
-  set omnifunc=rubycomplete#Complete
-  let g:rubycomplete_buffer_loading=1
-  let g:rubycomplete_rails=1
-  let g:rubycomplete_classes_in_global=1
   "improve autocomplete menu color
-  highlight Pmenu ctermbg=238 gui=bold
   let g:closetag_html_style=1
   " Insert comments markers
   map - :s/^/#/<CR>:nohlsearch<CR>
@@ -201,6 +215,23 @@ function! s:MyRubySettings()
   vnoremap <leader>m "zdi<%= <C-R>z %><ESC>
   set foldmethod=manual "auto fold
 endfunction
+
+" Various useful Ruby command mode shortcuts
+" focused-test can be found at http://github.com/btakita/focused-test
+augroup Ruby
+  au!
+  autocmd BufRead,BufNewFile,BufEnter *_test.rb,test_*.rb
+    \ :nmap <leader>R V:<C-U>!focused-test -b -f % -l <C-R>=line(".")<CR> \| tee /tmp/output.txt<CR>
+  autocmd BufRead,BufNewFile,BufEnter *.rb
+    \ :nmap <leader>r :<C-U>!ruby % \| tee /tmp/output.txt<CR>|
+    \ :nmap <leader>c :<C-U>!ruby -c % \| tee /tmp/output.txt<CR>|
+    \ :vmap b :!beautify-ruby<CR>
+  autocmd BufRead,BufNewFile,BufEnter *_spec.rb
+    \ :nmap <leader>r :<C-U>!spec % \| tee /tmp/output.txt<CR>
+augroup END
+
+" json is javascript
+autocmd BufNewFile,BufReadPost,BufEnter *.json set filetype=javascript
 
 function! s:MyPythonSettings()
   set ai sw=4 sts=4 et
@@ -235,3 +266,6 @@ map <leader>rg :silent call RailsScriptSearch(expand("<cword>"))<CR>:cc<CR>
 
 " search for the method definition of the word under the cursor
 map <leader>rd :silent call RailsScriptSearch(expand("'def .*<cword>'"))<CR>:cc<CR>
+
+" open tmp output
+nmap <leader>v :cfile /tmp/output.txt<CR>:copen<CR>
