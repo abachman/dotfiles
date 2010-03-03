@@ -21,10 +21,11 @@ export SDL_audiodriver=alsa
 export EDITOR=vim
 
 # JAVA NONSENSE
+export ANT_HOME=/usr/share/ant
 export JAVA_HOME=/usr/lib/jvm/java-6-sun/jre
 export JAVA_VERSION=1.6
 export FLEX_HOME=/home/adam/tools/flex_sdk_3.4
-export RED5_HOME=/usr/lib/red5
+# export RED5_HOME=/usr/lib/red5
 export PUREMVC_HOME=/home/adam/src/PureMVC_AS3_2_0_4/bin
 export DEGRAFA_HOME=/home/adam/src/Degrafa_Beta3.1_Flex3
 

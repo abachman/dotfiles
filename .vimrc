@@ -26,25 +26,59 @@ set smarttab
 set ww=<,>,[,],h,l    "wrap on movement keys
 let mapleader = ","
 
-" Custom Status Line
-set statusline=%t%m%r%h%=%l,%v\ %p%%\ of\ %L\ %40{strftime('%c')}
+" Set to auto read when a file is changed from the outside
+set autoread
 
-" Enable closetag macro
-au Filetype markdown,html,xml,xsl,eruby,ruby,md,txt source ~/.vim/macros/closetag.vim
+" Fast editing of the .vimrc
+map <leader>e :e! ~/.vimrc<cr>
+
+" When pressing <leader>cd switch to the directory of the open buffer
+map <leader>cd :cd %:p:h<cr>
+
+" Custom Status Line
+set statusline=%t%m\ cwd:\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
+
+function! CurDir()
+  let curdir = substitute(getcwd(), '/home/adam/', "~/", "g")
+  return curdir
+endfunction
 
 " Intuitive backspacing in insert mode
 set backspace=indent,eol,start
 
 " change buffer path to that of the current file
-autocmd BufEnter * lcd %:p:h
+" autocmd BufEnter * lcd %:p:h
 
 " highlight cursor line in INSERT mode.
 autocmd InsertLeave * se nocul
 autocmd InsertEnter * se cul
 
+"display tabs and trailing spaces
+set list
+set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
+
+"clean trailing spaces
+noremap <leader>v :%s/\s\+$//g<CR>
+
+"dont continue comments when pushing o/O
+set formatoptions-=o
+
+"some stuff to get the mouse going in term
+set mouse=a
+set ttymouse=xterm2
+
+"tell the term has 256 colors
+set t_Co=256
+
 " grep options
 set grepprg=ack
 set grepformat=%f:%l:%m
+
+" assume the /g flag on :s substitutions to replace all matches in a line
+set gdefault
+
+" keep 3 lines visible at top and bottom
+set scrolloff=3
 
 " NerdTree
 let NERDTreeShowBookmarks=1
@@ -67,18 +101,15 @@ let g:bufExplorerSortBy='number'
 " /home/adam/workspace/chase_ci
 " /home/adam/workspace/kpd/trunk/web
 " /home/adam/workspace/alextom/chase_comparison_backend/branches/tiny_mce_prototype
-let g:fuzzy_roots=['/home/adam/workspace/alextom/chase_comparison_backend/branches/tiny_mce_prototype']
-let g:fuzzy_ignore=".git/**,.svn/**,*.log,vendor/**,public/paperclip/**,public/images/**,public/flash/**,public/gallery/**,test/tmp/**,tmp/**,tmp/system/**,public/system,public/system/**,public/javascripts/tiny_mce/**"
-let g:fuzzy_ceiling=5000
-let g:fuzzy_matching_limit=10
-let g:fuzzy_enumerating_limit=8
-
-" snippetsEmu
-let g:snippetsEmu_key="<C-Tab>"
+" let g:fuzzy_roots=['/home/adam/workspace/alextom/chase_comparison_backend/branches/tiny_mce_prototype']
+let g:fuzzy_ignore=".git/**,.svn/**,*.log,vendor/**,public/paperclip/**,public/images/**,public/flash/**,public/gallery/**,test/tmp/**,tmp/**,tmp/system/**,public/system,public/system/**,public/javascripts/tiny_mce/**,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf"
+let g:fuzzy_ceiling=10000
+let g:fuzzy_matching_limit=50
+let g:fuzzy_enumerating_limit=10
 
 " Key Mappings
 " reload vimrc
-nmap ,s :source ~/.vimrc<CR> :FuzzyFinderTextMateRefreshFiles<CR>
+nmap ,s :source ~/.vimrc<CR>
 nmap ,g :source ~/.gvimrc<CR>
 " Tab and Shift-Tab indent and unindent
 inoremap <S-Tab> <esc>mp<<2h`pa
@@ -147,8 +178,6 @@ function! s:RunShellCommand(cmdline)
 endfunction
 command! -complete=file -nargs=* Svn call s:RunShellCommand('svn '.<q-args>)
 
-
-
 map <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
   setlocal wrap
@@ -170,7 +199,6 @@ function! WrapMode()
   map <buffer> j gj
   map <buffer> k gk
 endfunction
-
 
 """""" Filetype Specific Settings
 augroup myfiletypes
@@ -267,5 +295,14 @@ map <leader>rg :silent call RailsScriptSearch(expand("<cword>"))<CR>:cc<CR>
 " search for the method definition of the word under the cursor
 map <leader>rd :silent call RailsScriptSearch(expand("'def .*<cword>'"))<CR>:cc<CR>
 
-" open tmp output
-nmap <leader>v :cfile /tmp/output.txt<CR>:copen<CR>
+" lcd to current rails project root
+map <leader>r :if exists("b:rails_root")<CR>:Rlcd<CR>:pwd<CR>:endif<CR>
+
+" Enable closetag macro
+" au Filetype markdown,html,xhtml,xml,xsl,eruby,ruby,md,txt,htm,js,javascript
+source ~/.vim/macros/closetag.vim
+
+" Run with rails root as cwd
+map <leader>j :! rhino lib/fulljslint.js %:p<CR>
+
+
