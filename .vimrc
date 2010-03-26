@@ -26,9 +26,6 @@ set smarttab
 set ww=<,>,[,],h,l    "wrap on movement keys
 let mapleader = ","
 
-" Set to auto read when a file is changed from the outside
-set autoread
-
 " Fast editing of the .vimrc
 map <leader>e :e! ~/.vimrc<cr>
 
@@ -58,7 +55,7 @@ set list
 set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
 
 "clean trailing spaces
-noremap <leader>v :%s/\s\+$//g<CR>
+noremap <silent> <leader>v mv:%s/\s\+$//g<CR>`v
 
 "dont continue comments when pushing o/O
 set formatoptions-=o
@@ -90,22 +87,11 @@ map <leader>t :TlistToggle<CR>
 " BufExplorer
 let g:bufExplorerSortBy='number'
 
-" FuzzyFinder
-"   current: http://github.com/jamis/fuzzyfinder_textmate/tree/master
-"   (2009-02-09)
-" FUZZYROOTS:
-" /home/adam/workspace/psl/branches/community-finder
-" /home/adam/workspace/psl/trunk
-" /home/adam/workspace/windcurrent
-" /home/adam/workspace/xom_bac_v2/rails
-" /home/adam/workspace/chase_ci
-" /home/adam/workspace/kpd/trunk/web
-" /home/adam/workspace/alextom/chase_comparison_backend/branches/tiny_mce_prototype
-" let g:fuzzy_roots=['/home/adam/workspace/alextom/chase_comparison_backend/branches/tiny_mce_prototype']
-let g:fuzzy_ignore=".git/**,.svn/**,*.log,vendor/**,public/paperclip/**,public/images/**,public/flash/**,public/gallery/**,test/tmp/**,tmp/**,tmp/system/**,public/system,public/system/**,public/javascripts/tiny_mce/**,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf"
-let g:fuzzy_ceiling=10000
-let g:fuzzy_matching_limit=50
-let g:fuzzy_enumerating_limit=10
+" Command-T (supercedes FuzzyFinderTextMate)
+let g:CommandTMaxHeight=20
+let g:CommandTScanDotDirectories=0
+let wildignore=".git/**,.svn/**,*.log,vendor/**,public/paperclip/**,public/images/**,public/flash/**,public/gallery/**,test/tmp/**,tmp/**,tmp/system/**,public/system,public/system/**,**/javascripts/tiny_mce/**,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf"
+map <C-t> :CommandT<CR>
 
 " Key Mappings
 " reload vimrc
@@ -117,8 +103,6 @@ noremap <Tab> >>
 noremap <S-Tab> <<
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
-" Fuzzy Finder (like text mate)
-map <C-t> :FuzzyFinderTextMate<CR>
 " Buffer nav with C-n C-p
 inoremap <C-h> <esc><C-w><C-h>
 inoremap <C-j> <esc><C-w><C-j>
@@ -180,9 +164,9 @@ command! -complete=file -nargs=* Svn call s:RunShellCommand('svn '.<q-args>)
 
 map <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
+  setlocal formatoptions=l
   setlocal wrap
   setlocal lbr
-  setlocal nonumber
   setlocal foldmethod=manual
   " treat long wrapped lines (paragraphs) like short lines.
   " i.e., directional keys move directly up and down visually
@@ -239,24 +223,10 @@ function! s:MyRubySettings()
   let g:closetag_html_style=1
   " Insert comments markers
   map - :s/^/#/<CR>:nohlsearch<CR>
-  " select current def (in ruby)
+  " wrap selected text in ERB escape tag
   vnoremap <leader>m "zdi<%= <C-R>z %><ESC>
   set foldmethod=manual "auto fold
 endfunction
-
-" Various useful Ruby command mode shortcuts
-" focused-test can be found at http://github.com/btakita/focused-test
-augroup Ruby
-  au!
-  autocmd BufRead,BufNewFile,BufEnter *_test.rb,test_*.rb
-    \ :nmap <leader>R V:<C-U>!focused-test -b -f % -l <C-R>=line(".")<CR> \| tee /tmp/output.txt<CR>
-  autocmd BufRead,BufNewFile,BufEnter *.rb
-    \ :nmap <leader>r :<C-U>!ruby % \| tee /tmp/output.txt<CR>|
-    \ :nmap <leader>c :<C-U>!ruby -c % \| tee /tmp/output.txt<CR>|
-    \ :vmap b :!beautify-ruby<CR>
-  autocmd BufRead,BufNewFile,BufEnter *_spec.rb
-    \ :nmap <leader>r :<C-U>!spec % \| tee /tmp/output.txt<CR>
-augroup END
 
 " json is javascript
 autocmd BufNewFile,BufReadPost,BufEnter *.json set filetype=javascript
@@ -268,35 +238,10 @@ function! s:MyPythonSettings()
   set foldmethod=marker "auto fold
 endfunction
 
-" http://www.37signals.com/svn/posts/1616-introducing-the-projectsearch-rails-plugin
-function! RailsScriptSearch(args)
-  let l:savegrepprg = &grepprg
-  let l:savegrepformat = &grepformat
-
-  try
-    let l:_buffer = bufnr('%')
-    let l:_rails_root = getbufvar(_buffer, 'rails_root')
-    exe 'lcd ' . l:_rails_root
-    set grepprg=script/find
-    set grepformat=%f:%l:%m
-    execute "grep " . a:args
-  finally
-    execute "set grepformat=" . l:savegrepformat
-    execute "set grepprg=" . l:savegrepprg
-  endtry
-endfunction
-
-" search with explicitly provided arguments
-command! -n=? Rgrep :call RailsScriptSearch('<args>')
-
-" search for the word under the cursor
-map <leader>rg :silent call RailsScriptSearch(expand("<cword>"))<CR>:cc<CR>
-
-" search for the method definition of the word under the cursor
-map <leader>rd :silent call RailsScriptSearch(expand("'def .*<cword>'"))<CR>:cc<CR>
-
 " lcd to current rails project root
-map <leader>r :if exists("b:rails_root")<CR>:Rlcd<CR>:pwd<CR>:endif<CR>
+map <silent> <leader>r :if exists("b:rails_root")<CR>:Rlcd<CR>:endif<CR>
+" lcd to current file path
+map <silent> <leader>R :lcd %:p:h<CR>
 
 " Enable closetag macro
 " au Filetype markdown,html,xhtml,xml,xsl,eruby,ruby,md,txt,htm,js,javascript
