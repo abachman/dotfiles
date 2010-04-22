@@ -90,7 +90,7 @@ let g:bufExplorerSortBy='number'
 " Command-T (supercedes FuzzyFinderTextMate)
 let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=0
-let wildignore=".git/**,.svn/**,*.log,vendor/**,public/paperclip/**,public/images/**,public/flash/**,public/gallery/**,test/tmp/**,tmp/**,tmp/system/**,public/system,public/system/**,**/javascripts/tiny_mce/**,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf"
+set wildignore=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class
 map <C-t> :CommandT<CR>
 
 " Key Mappings
