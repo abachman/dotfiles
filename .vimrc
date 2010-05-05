@@ -55,7 +55,7 @@ set list
 set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
 
 "clean trailing spaces
-noremap <silent> <leader>v mv:%s/\s\+$//g<CR>`v
+noremap <silent> <leader>v mv:%s/\s\+$//<CR>:%s/\t/  /<CR>`v
 
 "dont continue comments when pushing o/O
 set formatoptions-=o
@@ -92,6 +92,23 @@ let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=0
 set wildignore=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class
 map <C-t> :CommandT<CR>
+
+" ZenCoding: http://mattn.github.com/zencoding-vim
+let g:user_zen_settings = {
+\  'indentation' : '  ',
+\  'perl' : {
+\    'aliases' : {
+\      'req' : 'require '
+\    },
+\    'snippets' : {
+\      'use' : "use strict\nuse warnings\n\n",
+\      'warn' : "warn \"|\";",
+\    }
+\  }
+\}
+let g:user_zen_leader_key = '<C-z>'
+let g:user_zen_expandabbr_key = '<C-e>'
+let g:use_zen_complete_tag = 1
 
 " Key Mappings
 " reload vimrc
@@ -149,18 +166,12 @@ nmap K <up>
 " Load matchit (% to bounce from do to end, etc.)
 runtime! macros/matchit.vim
 
-" Run a shell command in a new window
-command! -complete=file -nargs=+ Shell call s:RunShellCommand(<q-args>)
-function! s:RunShellCommand(cmdline)
-  botright new
-  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
-  call setline(1,a:cmdline)
-  call setline(2,substitute(a:cmdline,'.','=','g'))
-  execute 'silent $read !'.escape(a:cmdline,'%#')
-  setlocal nomodifiable
-  1
-endfunction
-command! -complete=file -nargs=* Svn call s:RunShellCommand('svn '.<q-args>)
+"For screen.vim send block
+"to SendScreen function
+"(eg Scheme interpreter)
+"http://www.vim.org/scripts/script.php?script_id=2711
+vmap <C-c><C-c> :ScreenSend<CR>
+nmap <C-c><C-c> vip<C-c><C-c>
 
 map <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
@@ -198,6 +209,7 @@ augroup myfiletypes
   autocmd FileType vim call s:MyVimSettings()
   autocmd FileType python call s:MyPythonSettings()
   autocmd FileType markdown call s:MyMarkdownSettings()
+  autocmd FileType html,xhtml source ~/.vim/ftplugin/zencoding.vim
 augroup END
 
 " Clear all comment markers (one rule for all languages)
