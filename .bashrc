@@ -13,6 +13,15 @@ export HISTCONTROL=ignoreboth
 export HISTFILESIZE=100000000
 export HISTSIZE=100000
 
+if [[ -s /home/adam/.rvm/scripts/rvm ]] ; then source /home/adam/.rvm/scripts/rvm ; fi
+
+# REE tuning
+export RUBY_HEAP_MIN_SLOTS=1000000
+export RUBY_HEAP_SLOTS_INCREMENT=250000
+export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
+export RUBY_GC_MALLOC_LIMIT=100000000
+export RUBY_HEAP_FREE_MIN=1000000
+
 export PATH=$PATH:/home/adam/tools/flex_sdk_3.4/bin:/home/adam/bin:
 export PATH=$PATH:/home/adam/projects/better-console/sls-svn:/home/adam/projects/better-console/bin
 export PATH=$PATH:/home/adam/src/nicks-toolbox:/home/adam/src/johns-toolbox

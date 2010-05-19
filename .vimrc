@@ -55,7 +55,7 @@ set list
 set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
 
 "clean trailing spaces
-noremap <silent> <leader>v mv:%s/\s\+$//<CR>:%s/\t/  /<CR>`v
+noremap <silent> <leader>v mv:%s/\s\+$//e<CR>:%s/\t/  /e<CR>`v
 
 "dont continue comments when pushing o/O
 set formatoptions-=o
@@ -108,7 +108,7 @@ let g:user_zen_settings = {
 \}
 let g:user_zen_leader_key = '<C-z>'
 let g:user_zen_expandabbr_key = '<C-e>'
-let g:use_zen_complete_tag = 1
+
 
 " Key Mappings
 " reload vimrc
@@ -175,7 +175,7 @@ nmap <C-c><C-c> vip<C-c><C-c>
 
 map <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
-  setlocal formatoptions=l
+  setlocal formatoptions=tcql
   setlocal wrap
   setlocal lbr
   setlocal foldmethod=manual
