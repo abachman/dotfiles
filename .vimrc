@@ -162,6 +162,8 @@ inoremap <S-left> <esc>v<left>
 " unmap shift-k
 vmap K <up>
 nmap K <up>
+" toggle numbers
+nmap <leader>n :set nonu!<CR>
 
 " Load matchit (% to bounce from do to end, etc.)
 runtime! macros/matchit.vim

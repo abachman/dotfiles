@@ -22,7 +22,7 @@ export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
 export RUBY_GC_MALLOC_LIMIT=100000000
 export RUBY_HEAP_FREE_MIN=1000000
 
-export PATH=$PATH:/home/adam/tools/flex_sdk_3.4/bin:/home/adam/bin:
+export PATH=$PATH:/home/adam/tools/flex_sdk_4/bin:/home/adam/bin:
 export PATH=$PATH:/home/adam/projects/better-console/sls-svn:/home/adam/projects/better-console/bin
 export PATH=$PATH:/home/adam/src/nicks-toolbox:/home/adam/src/johns-toolbox
 export PATH=$PATH:/home/adam/src/flash_player_10_linux_dev/standalone/debugger
@@ -31,12 +31,15 @@ export EDITOR=vim
 
 # JAVA NONSENSE
 export ANT_HOME=/usr/share/ant
-export JAVA_HOME=/usr/lib/jvm/java-6-sun/jre
+export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/jre
 export JAVA_VERSION=1.6
-export FLEX_HOME=/home/adam/tools/flex_sdk_3.4
+export FLEX_HOME=/home/adam/tools/flex_sdk_4
 # export RED5_HOME=/usr/lib/red5
-export PUREMVC_HOME=/home/adam/src/PureMVC_AS3_2_0_4/bin
-export DEGRAFA_HOME=/home/adam/src/Degrafa_Beta3.1_Flex3
+# export PUREMVC_HOME=/home/adam/src/PureMVC_AS3_2_0_4/bin
+# export DEGRAFA_HOME=/home/adam/src/Degrafa_Beta3.1_Flex3
+
+# freetds, odbc, sql server from linux connector
+export TDSDUMP=/tmp/freetds.log
 
 # command line friendly: $ svn co $svn/project/trunk
 export svn=https://svn.slsdev.net
@@ -145,7 +148,9 @@ current() {
 
 # simple functions
 psgrep() {
-  ps aux | grep $1
+  FIRST=`echo $1 | sed -e 's/^\(.\).*/\1/'`
+  REST=`echo $1 | sed -e 's/^.\(.*\)/\1/'`
+  ps aux | grep "[$FIRST]$REST"
 }
 
 # copy pwd to clipboard, cd to clipboard (poor man's bookmark)
@@ -154,6 +159,7 @@ alias pc='cd `xsel -b`'
 
 ## Rake with RAILS_ENV=test
 alias raket="rake RAILS_ENV=test"
+alias rakec="rake RAILS_ENV=cucumber"
 
 # color diffs for SVN
 function svn-diff () {

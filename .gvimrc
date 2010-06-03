@@ -15,6 +15,6 @@ nmap <C-F7> :if &guioptions=~'r' \| set guioptions-=r \| else \| set guioptions+
 
 set gfn=Terminus\ 9
 
-"colorscheme railscasts 
+"colorscheme railscasts
 "colorscheme vividchalk
 colorscheme desert
