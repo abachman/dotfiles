@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-mv ~/.vimrc ~/.vimrc.bax
+mv ~/.vimrc ~/.vimrc.bak
 ln -s `pwd`/.vimrc /home/$USER/.vimrc
 mv ~/.gvimrc ~/.gvimrc.bak
 ln -s `pwd`/.gvimrc /home/$USER/.gvimrc

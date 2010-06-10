@@ -32,6 +32,8 @@ map <leader>e :e! ~/.vimrc<cr>
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
 
+" Always show status line
+set laststatus=2
 " Custom Status Line
 set statusline=%t%m\ cwd:\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
 
@@ -201,6 +203,8 @@ endfunction
 augroup myfiletypes
   " Clear old autocmds in group
   autocmd!
+
+  " lcd to current rails project root
   autocmd BufRead *.as set filetype=actionscript
   autocmd BufRead *.mxml set filetype=mxml
   autocmd BufRead *.rtex set filetype=tex
@@ -212,6 +216,7 @@ augroup myfiletypes
   autocmd FileType python call s:MyPythonSettings()
   autocmd FileType markdown call s:MyMarkdownSettings()
   autocmd FileType html,xhtml source ~/.vim/ftplugin/zencoding.vim
+
 augroup END
 
 " Clear all comment markers (one rule for all languages)
@@ -254,14 +259,10 @@ endfunction
 
 " lcd to current rails project root
 map <silent> <leader>r :if exists("b:rails_root")<CR>:Rlcd<CR>:endif<CR>
+
 " lcd to current file path
 map <silent> <leader>R :lcd %:p:h<CR>
 
 " Enable closetag macro
 " au Filetype markdown,html,xhtml,xml,xsl,eruby,ruby,md,txt,htm,js,javascript
 source ~/.vim/macros/closetag.vim
-
-" Run with rails root as cwd
-map <leader>j :! rhino lib/fulljslint.js %:p<CR>
-
-
