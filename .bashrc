@@ -28,6 +28,7 @@ export PATH=$PATH:/home/adam/src/nicks-toolbox:/home/adam/src/johns-toolbox
 export PATH=$PATH:/home/adam/src/flash_player_10_linux_dev/standalone/debugger
 export SDL_audiodriver=alsa
 export EDITOR=vim
+export GEM_EDITOR=vim
 
 # JAVA NONSENSE
 export ANT_HOME=/usr/share/ant
@@ -289,4 +290,4 @@ function color_sed() {
   echo -e "$1" | sed "s/\${txtblu}/\[${txtblu}\]/"
 }
 
-PS1="\[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(ps_scm_f)\[${NONE}\]\n$ "
+PS1="\[${txtgrn}\$(~/.rvm/bin/rvm-prompt)${NONE}\] \[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(ps_scm_f)\[${NONE}\]\n$ "

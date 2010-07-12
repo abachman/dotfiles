@@ -26,6 +26,10 @@ set smarttab
 set ww=<,>,[,],h,l    "wrap on movement keys
 let mapleader = ","
 
+" highlight searches, clear with spacebar
+set hlsearch
+nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
+
 " Fast editing of the .vimrc
 map <leader>e :e! ~/.vimrc<cr>
 
@@ -92,8 +96,9 @@ let g:bufExplorerSortBy='number'
 " Command-T (supercedes FuzzyFinderTextMate)
 let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=0
-set wildignore=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class
+set wildignore=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc
 map <C-t> :CommandT<CR>
+map <leader>f :CommandTFlush<CR>
 
 " ZenCoding: http://mattn.github.com/zencoding-vim
 let g:user_zen_settings = {
@@ -166,6 +171,9 @@ vmap K <up>
 nmap K <up>
 " toggle numbers
 nmap <leader>n :set nonu!<CR>
+
+" hashrocket!
+imap hh =>
 
 " Load matchit (% to bounce from do to end, etc.)
 runtime! macros/matchit.vim

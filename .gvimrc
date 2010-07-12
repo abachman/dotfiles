@@ -14,6 +14,7 @@ nmap <C-F11> :if &guioptions=~'m' \| set guioptions-=m \| else \| set guioptions
 nmap <C-F7> :if &guioptions=~'r' \| set guioptions-=r \| else \| set guioptions+=r \| endif<CR>
 
 set gfn=Terminus\ 9
+"set gfn=Inconsolata\ 14
 
 "colorscheme railscasts
 "colorscheme vividchalk
