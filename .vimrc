@@ -145,6 +145,7 @@ imap <C-v> <esc>pa
 " Home/end like emacs and bash
 nmap <C-e> $
 imap <C-e> <End>
+nmap <C-a> ggVG
 "nmap <C-a> 0
 "imap <C-a> <Home>
 " CTRL-S is Save
@@ -187,7 +188,7 @@ nmap <C-c><C-c> vip<C-c><C-c>
 
 map <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
-  setlocal formatoptions=tcql
+  setlocal formatoptions=a
   setlocal wrap
   setlocal lbr
   setlocal foldmethod=manual
@@ -253,6 +254,9 @@ function! s:MyRubySettings()
   " wrap selected text in ERB escape tag
   vnoremap <leader>m "zdi<%= <C-R>z %><ESC>
   set foldmethod=manual "auto fold
+
+  " Get rid of rails format.html { } blocks
+  map <silent> <leader>rf :%s/[a-z]*\.[a-z]* { \([^}]*\) }/\1<CR>
 endfunction
 
 " json is javascript

@@ -290,4 +290,5 @@ function color_sed() {
   echo -e "$1" | sed "s/\${txtblu}/\[${txtblu}\]/"
 }
 
-PS1="\[${txtgrn}\$(~/.rvm/bin/rvm-prompt)${NONE}\] \[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(ps_scm_f)\[${NONE}\]\n$ "
+PS1="\[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(ps_scm_f)\[${NONE}\]\n$ "
+PS1="\[${txtgrn}\]\$(~/.rvm/bin/rvm-prompt)\[${NONE}\] $PS1"
