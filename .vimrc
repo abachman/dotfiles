@@ -1,6 +1,7 @@
-set nocompatible          " We're running Vim, not Vi!
-syntax on                 " Enable syntax highlighting
-filetype plugin indent on " Enable filetype-specific indenting and plugins
+set nocompatible                           " We're running Vim, not Vi!
+syntax on                                  " Enable syntax highlighting
+call pathogen#runtime_append_all_bundles() " autoload .vim/bundle
+filetype plugin indent on                  " Enable filetype-specific indenting and plugins
 
 set showmatch "show matching surround
 set hidden    "allow hiding buffers without save
@@ -28,6 +29,7 @@ let mapleader = ","
 
 " highlight searches, clear with spacebar
 set hlsearch
+set hl=l:Visual
 nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
 
 " Fast editing of the .vimrc
@@ -97,6 +99,7 @@ let g:bufExplorerSortBy='number'
 let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=0
 set wildignore=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc
+set wildignore+=**/generated/**,*.cache,bin-debug/**,deploy/**,*.swc
 map <C-t> :CommandT<CR>
 map <leader>f :CommandTFlush<CR>
 
@@ -223,6 +226,7 @@ augroup myfiletypes
   autocmd BufRead *.as set filetype=actionscript
   autocmd BufRead *.mxml set filetype=mxml
   autocmd BufRead *.rtex set filetype=tex
+  autocmd BufRead *.clj set filetype=clojure
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile *.ru set filetype=ruby
   autocmd FileType java,c,cpp,c++ call s:MyCLikeSettings()
@@ -230,6 +234,7 @@ augroup myfiletypes
   autocmd FileType vim call s:MyVimSettings()
   autocmd FileType python call s:MyPythonSettings()
   autocmd FileType markdown call s:MyMarkdownSettings()
+  autocmd FileType clojure call s:MyClojureSettings()
   autocmd FileType html,xhtml source ~/.vim/ftplugin/zencoding.vim
 
 augroup END
@@ -263,6 +268,16 @@ function! s:MyRubySettings()
 
   " Get rid of rails format.html { } blocks
   map <silent> <leader>rf :%s/[a-z]*\.[a-z]* { \([^}]*\) }/\1<CR>
+endfunction
+
+function! s:MyClojureSettings()
+  " let g:clj_highlight_builtins=1      " Highlight Clojure's builtins
+  " let g:clj_paren_rainbow=1           " Rainbow parentheses'!
+
+  let g:vimclojure#HighlightBuiltins=1   " Highlight Clojure's builtins
+  let g:vimclojure#ParenRainbow=1        " Rainbow parentheses'!
+  let g:vimclojure#DynamicHighlighting=1 " Dynamically highlight functions
+
 endfunction
 
 " json is javascript
