@@ -22,7 +22,7 @@ export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
 export RUBY_GC_MALLOC_LIMIT=100000000
 export RUBY_HEAP_FREE_MIN=1000000
 
-export PATH=$PATH:/home/adam/tools/flex_sdk_4/bin:/home/adam/bin:
+export PATH=$PATH:/var/lib/flex/sdks/4.1/bin:/home/adam/bin:
 export PATH=$PATH:/home/adam/projects/better-console/sls-svn:/home/adam/projects/better-console/bin
 export PATH=$PATH:/home/adam/src/nicks-toolbox:/home/adam/src/johns-toolbox
 export PATH=$PATH:/home/adam/src/flash_player_10_linux_dev/standalone/debugger
@@ -34,10 +34,13 @@ export GEM_EDITOR=vim
 export ANT_HOME=/usr/share/ant
 export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/jre
 export JAVA_VERSION=1.6
-export FLEX_HOME=/home/adam/tools/flex_sdk_4
+export FLEX_HOME=/var/lib/flex/sdks/4.1
 # export RED5_HOME=/usr/lib/red5
 # export PUREMVC_HOME=/home/adam/src/PureMVC_AS3_2_0_4/bin
 # export DEGRAFA_HOME=/home/adam/src/Degrafa_Beta3.1_Flex3
+
+# project support
+export LANCOME_UNFUDDLE_HOME=/home/adam/workspace/lancome/unfuddle
 
 # freetds, odbc, sql server from linux connector
 export TDSDUMP=/tmp/freetds.log
