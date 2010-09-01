@@ -186,9 +186,15 @@ runtime! macros/matchit.vim
 vmap <C-c><C-c> :ScreenSend<CR>
 nmap <C-c><C-c> vip<C-c><C-c>
 
+map <leader>h <esc>:call ProjectionMode()<CR>
+function ProjectionMode()
+  set gfn=Inconsolata\ 16
+  set laststatus=0
+endfunction
+
 map <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
-  setlocal formatoptions=a
+  setlocal formatoptions=tcql
   setlocal wrap
   setlocal lbr
   setlocal foldmethod=manual
