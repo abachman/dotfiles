@@ -190,7 +190,7 @@ vmap <C-c><C-c> :ScreenSend<CR>
 nmap <C-c><C-c> vip<C-c><C-c>
 
 map <leader>h <esc>:call ProjectionMode()<CR>
-function ProjectionMode()
+function! ProjectionMode()
   set gfn=Inconsolata\ 16
   set laststatus=0
 endfunction
@@ -236,7 +236,7 @@ augroup myfiletypes
   autocmd FileType markdown call s:MyMarkdownSettings()
   autocmd FileType clojure call s:MyClojureSettings()
   autocmd FileType html,xhtml source ~/.vim/ftplugin/zencoding.vim
-
+  autocmd FileType actionscript,mxml call s:MyFlexSettings()
 augroup END
 
 " Clear all comment markers (one rule for all languages)
@@ -264,7 +264,6 @@ function! s:MyRubySettings()
   map - :s/^/#/<CR>:nohlsearch<CR>
   " wrap selected text in ERB escape tag
   vnoremap <leader>m "zdi<%= <C-R>z %><ESC>
-  set foldmethod=manual "auto fold
 
   " Get rid of rails format.html { } blocks
   map <silent> <leader>rf :%s/[a-z]*\.[a-z]* { \([^}]*\) }/\1<CR>
@@ -277,7 +276,10 @@ function! s:MyClojureSettings()
   let g:vimclojure#HighlightBuiltins=1   " Highlight Clojure's builtins
   let g:vimclojure#ParenRainbow=1        " Rainbow parentheses'!
   let g:vimclojure#DynamicHighlighting=1 " Dynamically highlight functions
+endfunction
 
+function! s:MyFlexSettings()
+  set smartindent sw=2 sts=2 et
 endfunction
 
 " json is javascript
