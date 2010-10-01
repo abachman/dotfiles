@@ -22,7 +22,7 @@ export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
 export RUBY_GC_MALLOC_LIMIT=100000000
 export RUBY_HEAP_FREE_MIN=1000000
 
-export PATH=$PATH:/var/lib/flex/sdks/4.1/bin:/home/adam/bin:
+export PATH=$PATH:/var/lib/flex/sdks/4.1/bin:/home/adam/bin
 export PATH=$PATH:/home/adam/projects/better-console/sls-svn:/home/adam/projects/better-console/bin
 export PATH=$PATH:/home/adam/src/nicks-toolbox:/home/adam/src/johns-toolbox
 export PATH=$PATH:/home/adam/src/flash_player_10_linux_dev/standalone/debugger
