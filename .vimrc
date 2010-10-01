@@ -98,8 +98,8 @@ let g:bufExplorerSortBy='number'
 " Command-T (supercedes FuzzyFinderTextMate)
 let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=0
-set wildignore=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc
-set wildignore+=**/generated/**,*.cache,bin-debug/**,deploy/**,*.swc
+set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/richter_data/*.xml
+set wildignore+=**/generated/**,*.cache,bin-debug/**,deploy/**,*.swc,public/system/**
 map <C-t> :CommandT<CR>
 map <leader>f :CommandTFlush<CR>
 
