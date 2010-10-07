@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-mv ~/.vimrc ~/.vimrc.bak
+mv ~/.vimrc{,.bak}
 ln -s `pwd`/.vimrc /home/$USER/.vimrc
-mv ~/.gvimrc ~/.gvimrc.bak
+mv ~/.gvimrc{,.bak}
 ln -s `pwd`/.gvimrc /home/$USER/.gvimrc
-mv ~/.bashrc ~/.bashrc.bak
+mv ~/.bashrc{,.bak}
 ln -s `pwd`/.bashrc /home/$USER/.bashrc
-mv ~/.screenrc ~/.screenrc.bak
+mv ~/.screenrc{,.bak}
 ln -s `pwd`/.screenrc /home/$USER/.screenrc
+mv ~/.tmux.conf{,.bak}
+ln -s `pwd`/.tmux.conf /home/$USER/.tmux.conf
