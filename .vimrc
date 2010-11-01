@@ -197,7 +197,8 @@ endfunction
 
 map <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
-  setlocal formatoptions=tcql
+  setlocal fo=a
+  setlocal textwidth=80
   setlocal wrap
   setlocal lbr
   setlocal foldmethod=manual
@@ -229,6 +230,9 @@ augroup myfiletypes
   autocmd BufRead *.clj set filetype=clojure
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile *.ru set filetype=ruby
+  autocmd BufRead,BufNewFile Gemfile set filetype=ruby
+  autocmd BufRead,BufNewFile Rakefile set filetype=ruby
+  autocmd BufRead,BufNewFile Capfile set filetype=ruby
   autocmd FileType java,c,cpp,c++ call s:MyCLikeSettings()
   autocmd FileType ruby,eruby call s:MyRubySettings()
   autocmd FileType vim call s:MyVimSettings()
