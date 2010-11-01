@@ -59,8 +59,8 @@ autocmd InsertLeave * se nocul
 autocmd InsertEnter * se cul
 
 "display tabs and trailing spaces
-set list
-set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
+"set list
+"set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
 
 "clean trailing spaces
 noremap <silent> <leader>v mv:%s/\s\+$//e<CR>:%s/\t/  /e<CR>`v
@@ -233,6 +233,7 @@ augroup myfiletypes
   autocmd BufRead,BufNewFile Gemfile set filetype=ruby
   autocmd BufRead,BufNewFile Rakefile set filetype=ruby
   autocmd BufRead,BufNewFile Capfile set filetype=ruby
+  autocmd BufRead,BufNewFile *.scss  set filetype=scss
   autocmd FileType java,c,cpp,c++ call s:MyCLikeSettings()
   autocmd FileType ruby,eruby call s:MyRubySettings()
   autocmd FileType vim call s:MyVimSettings()
