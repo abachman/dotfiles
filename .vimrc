@@ -197,11 +197,12 @@ endfunction
 
 map <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
-  setlocal fo=a
+  setlocal formatoptions=tcq
   setlocal textwidth=80
   setlocal wrap
   setlocal lbr
   setlocal foldmethod=manual
+  setlocal spell
   " treat long wrapped lines (paragraphs) like short lines.
   " i.e., directional keys move directly up and down visually
   " and movement keys wrap to the next visual line, not the
@@ -303,6 +304,5 @@ map <silent> <leader>r :if exists("b:rails_root")<CR>:Rlcd<CR>:endif<CR>
 " lcd to current file path
 map <silent> <leader>R :lcd %:p:h<CR>
 
-" Enable closetag macro
-" au Filetype markdown,html,xhtml,xml,xsl,eruby,ruby,md,txt,htm,js,javascript
+" Enable closetag macro all the time
 source ~/.vim/macros/closetag.vim
