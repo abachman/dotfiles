@@ -124,6 +124,7 @@ alias sl='ls'
 alias irb='irb -r "rubygems"'
 alias sz='du -cksh * | sort -rn | head -11'
 alias con='script/console'
+source ~/.projects
 
 rr() {
   CURRENT_PWD=`pwd`
