@@ -86,7 +86,7 @@ set gdefault
 set scrolloff=3
 
 " NerdTree
-let NERDTreeShowBookmarks=1
+let NERDTreeShowBookmarks=0
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " Tag List
@@ -118,7 +118,6 @@ let g:user_zen_settings = {
 \}
 let g:user_zen_leader_key = '<C-z>'
 let g:user_zen_expandabbr_key = '<C-e>'
-
 
 " Key Mappings
 " reload vimrc
@@ -179,6 +178,9 @@ nmap <leader>n :set nonu!<CR>
 " hashrocket!
 imap hh =>
 
+" esc
+imap jj <esc>
+
 " Load matchit (% to bounce from do to end, etc.)
 runtime! macros/matchit.vim
 
@@ -193,6 +195,7 @@ map <leader>h <esc>:call ProjectionMode()<CR>
 function! ProjectionMode()
   set gfn=Inconsolata\ 16
   set laststatus=0
+  set showcmd
 endfunction
 
 map <leader>q <esc>:call WrapMode()<CR>
