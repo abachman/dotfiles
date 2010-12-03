@@ -124,6 +124,7 @@ alias sl='ls'
 alias irb='irb -r "rubygems"'
 alias sz='du -cksh * | sort -rn | head -11'
 alias con='script/console'
+source ~/.projects
 
 rr() {
   CURRENT_PWD=`pwd`
@@ -223,7 +224,7 @@ find_svn_root() {
 ps_scm_f() {
   _VCS=
   local s=
-  if [[ -d ".svn" ]] ; then
+  if [[ -d ".svn" && ! "$(pwd)" =~ simplifymd ]] ; then
     local r=$(svn info | sed -n -e '/^Revision: \([0-9]*\).*$/s//\1/p' )
     local root=$(find_svn_root)
     local mod_symbol=$(svn status --ignore-externals | grep -v '^?' | grep -q -v '^X' && echo -n "⚡" )

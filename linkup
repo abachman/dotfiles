@@ -10,3 +10,5 @@ mv ~/.screenrc{,.bak}
 ln -s `pwd`/.screenrc /home/$USER/.screenrc
 mv ~/.tmux.conf{,.bak}
 ln -s `pwd`/.tmux.conf /home/$USER/.tmux.conf
+mv ~/.projects{,.bak}
+ln -s `pwd`/.projects /home/$USER/.projects
