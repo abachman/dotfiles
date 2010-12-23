@@ -1,5 +1,7 @@
+# THIS STUFF IS ONLY USEFUL TO ME, @abachman
 alias simplify='cd ~/workspace/simplifymd/erx_rcopia'
 alias laterlist='cd ~/projects/laterlist'
 alias psl='cd ~/workspace/psl/trunk'
 alias nodewise='cd ~/projects/nodewise'
+alias tixato='cd ~/projects/tixato && source ~/projects/tixato/.profile'
 
