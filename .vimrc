@@ -34,6 +34,7 @@ nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
 
 " Fast editing of the .vimrc
 map <leader>e :e! ~/.vimrc<cr>
+inoremap <leader>e <esc>:e! ~/.vimrc<cr>
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
@@ -199,6 +200,7 @@ function! ProjectionMode()
 endfunction
 
 map <leader>q <esc>:call WrapMode()<CR>
+inoremap <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
   setlocal formatoptions=tcq
   setlocal textwidth=80
