@@ -27,6 +27,8 @@ set smarttab
 set ww=<,>,[,],h,l    "wrap on movement keys
 let mapleader = ","
 
+noremap E yypjddjj
+
 " highlight searches, clear with spacebar
 set hlsearch
 set hl=l:Visual
@@ -119,6 +121,8 @@ let g:user_zen_settings = {
 let g:user_zen_leader_key = '<C-z>'
 let g:user_zen_expandabbr_key = '<C-e>'
 
+" Pretty
+nmap ,p gg=G
 
 " Key Mappings
 " reload vimrc
@@ -170,6 +174,8 @@ inoremap <S-up> <esc>v<up>
 inoremap <S-down> <esc>v<down>
 inoremap <S-right> <esc>v<right>
 inoremap <S-left> <esc>v<left>
+" S-home in insert acts like ^ in normal
+inoremap <S-home> <esc>^i
 " unmap shift-k
 vmap K <up>
 nmap K <up>
@@ -306,3 +312,26 @@ map <silent> <leader>R :lcd %:p:h<CR>
 
 " Enable closetag macro all the time
 source ~/.vim/macros/closetag.vim
+
+" Usage: 
+" 
+"   :Me ~/path/to/my/new/file.txt
+" 
+" creates /home/username/path/to/my/new with `mkdir -p` if it doesn't exist
+" and then opens file.txt
+" 
+
+function! Mkdire(path)
+  let l:newpath = fnamemodify(expand(a:path), ":p:h")
+  let l:newfile = expand(a:path)
+  if !isdirectory(l:newpath)
+    call mkdir(l:newpath, "p")
+  endif
+  execute "e " . l:newfile
+endfunction
+command! -nargs=1 -complete=file Me call Mkdire(<f-args>)
+
+" you can also automatically call the function before save (on every write)
+" au BufWritePre,FileWritePre * call Mkdire('%')
+
+

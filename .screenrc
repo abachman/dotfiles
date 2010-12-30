@@ -13,17 +13,17 @@ defscrollback 10000
 nonblock on
 msgwait 2
 
-term xterm-color
-termcapinfo xterm-color|rxvt ti@:te@
+# term xterm-color
+# termcapinfo xterm-color|rxvt ti@:te@
 
 hardstatus alwayslastline                                        
 hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{=kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B}%Y-%m-%d %{W}%c %{g}]'
 
 # vim color scheme helpers
-attrcolor b ".I"
-termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
-defbce "on"
-term screen-256color-bce
+#attrcolor b ".I"
+#termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+#defbce "on"
+#term screen-256color-bce
 
 # F1 and F2 to move one screen forward or backward
 bindkey -k f1 prev
