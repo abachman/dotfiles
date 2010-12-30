@@ -42,7 +42,9 @@ map <leader>cd :cd %:p:h<cr>
 " Always show status line
 set laststatus=2
 " Custom Status Line
-set statusline=%t%m\ cwd:\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
+set statusline=%t%m\ cwd:\ %{exists('g:loaded_rvm')?rvm#statusline():''}\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
+" rvm.vim sample
+" set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%{exists('g:loaded_rvm')?rvm#statusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
 function! CurDir()
   let curdir = substitute(getcwd(), '/home/adam/', "~/", "g")
