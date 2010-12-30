@@ -36,6 +36,7 @@ nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
 
 " Fast editing of the .vimrc
 map <leader>e :e! ~/.vimrc<cr>
+inoremap <leader>e <esc>:e! ~/.vimrc<cr>
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
@@ -43,7 +44,9 @@ map <leader>cd :cd %:p:h<cr>
 " Always show status line
 set laststatus=2
 " Custom Status Line
-set statusline=%t%m\ cwd:\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
+set statusline=%t%m\ cwd:\ %{exists('g:loaded_rvm')?rvm#statusline():''}\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
+" rvm.vim sample
+" set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%{exists('g:loaded_rvm')?rvm#statusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
 function! CurDir()
   let curdir = substitute(getcwd(), '/home/adam/', "~/", "g")
@@ -88,7 +91,7 @@ set gdefault
 set scrolloff=3
 
 " NerdTree
-let NERDTreeShowBookmarks=1
+let NERDTreeShowBookmarks=0
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " Tag List
@@ -185,6 +188,9 @@ nmap <leader>n :set nonu!<CR>
 " hashrocket!
 imap hh =>
 
+" esc
+imap jj <esc>
+
 " Load matchit (% to bounce from do to end, etc.)
 runtime! macros/matchit.vim
 
@@ -199,9 +205,11 @@ map <leader>h <esc>:call ProjectionMode()<CR>
 function! ProjectionMode()
   set gfn=Inconsolata\ 16
   set laststatus=0
+  set showcmd
 endfunction
 
 map <leader>q <esc>:call WrapMode()<CR>
+inoremap <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
   setlocal formatoptions=tcq
   setlocal textwidth=80
