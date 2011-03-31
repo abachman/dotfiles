@@ -94,13 +94,13 @@ map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 map <leader>t :TlistToggle<CR>
 
 " BufExplorer
-let g:bufExplorerSortBy='number'
+let g:bufExplorerSortBy='mru'
 
 " Command-T (supercedes FuzzyFinderTextMate)
 let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=0
 set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/richter_data/*.xml
-set wildignore+=**/generated/**,*.cache,bin-debug/**,deploy/**,*.swc,public/system/**
+set wildignore+=**/generated/**,*.cache,bin-debug/**,deploy/**,*.swc,public/system/**,app/mobile/**
 map <C-t> :CommandT<CR>
 map <leader>f :CommandTFlush<CR>
 

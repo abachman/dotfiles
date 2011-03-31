@@ -26,6 +26,7 @@ export PATH=$PATH:/var/lib/flex/sdks/4.1/bin:/home/adam/bin
 export PATH=$PATH:/home/adam/projects/better-console/sls-svn:/home/adam/projects/better-console/bin
 export PATH=$PATH:/home/adam/src/nicks-toolbox:/home/adam/src/johns-toolbox
 export PATH=$PATH:/home/adam/src/flash_player_10_linux_dev/standalone/debugger
+export PATH=$PATH:/home/adam/local/node/bin
 export SDL_audiodriver=alsa
 export EDITOR=vim
 export GEM_EDITOR=vim
