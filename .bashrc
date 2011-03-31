@@ -13,6 +13,9 @@ export HISTCONTROL=ignoreboth
 export HISTFILESIZE=100000000
 export HISTSIZE=100000
 
+# run in vim mode
+set -o vi
+
 if [[ -s /home/adam/.rvm/scripts/rvm ]] ; then source /home/adam/.rvm/scripts/rvm ; fi
 
 # REE tuning
@@ -35,7 +38,7 @@ export GEM_EDITOR=vim
 export ANT_HOME=/usr/share/ant
 export JAVA_HOME=/usr/lib/jvm/java-6-openjdk/jre
 export JAVA_VERSION=1.6
-export FLEX_HOME=/var/lib/flex/sdks/4.1
+export FLEX_HOME=/var/lib/flex/sdks/3.5
 # export RED5_HOME=/usr/lib/red5
 # export PUREMVC_HOME=/home/adam/src/PureMVC_AS3_2_0_4/bin
 # export DEGRAFA_HOME=/home/adam/src/Degrafa_Beta3.1_Flex3
@@ -52,6 +55,8 @@ export svn=https://svn.slsdev.net
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
+stty stop undef
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -157,6 +162,10 @@ psgrep() {
   FIRST=`echo $1 | sed -e 's/^\(.\).*/\1/'`
   REST=`echo $1 | sed -e 's/^.\(.*\)/\1/'`
   ps aux | grep "[$FIRST]$REST"
+}
+
+timestamp() {
+  date +%Y%m%d%H%M%S
 }
 
 # copy pwd to clipboard, cd to clipboard (poor man's bookmark)
@@ -298,3 +307,4 @@ function color_sed() {
 PS1="\[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(ps_scm_f)\[${NONE}\]\n$ "
 PS1="\[${txtgrn}\]\$(~/.rvm/bin/rvm-prompt)\[${NONE}\] $PS1"
 
+export PATH=$HOME/local/bin:$PATH

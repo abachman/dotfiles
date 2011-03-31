@@ -1,6 +1,9 @@
 set nocompatible                           " We're running Vim, not Vi!
-syntax on                                  " Enable syntax highlighting
+
+" system specific
 call pathogen#runtime_append_all_bundles() " autoload .vim/bundle
+
+syntax on                                  " Enable syntax highlighting
 filetype plugin indent on                  " Enable filetype-specific indenting and plugins
 
 set showmatch "show matching surround
@@ -39,29 +42,24 @@ inoremap <leader>e <esc>:e! ~/.vimrc<cr>
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
 
-" Always show status line
-set laststatus=2
-" Custom Status Line
-set statusline=%t%m\ cwd:\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
-
 function! CurDir()
   let curdir = substitute(getcwd(), '/home/adam/', "~/", "g")
   return curdir
 endfunction
 
+" Always show status line
+set laststatus=2
+" Custom Status Line
+set statusline=%t%m\ cwd:\ %{exists('g:loaded_rvm')?rvm#statusline():''}\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
+" rvm.vim sample
+" set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%{exists('g:loaded_rvm')?rvm#statusline():''}%=%-16(\ %l,%c-%v\ %)%P
+
 " Intuitive backspacing in insert mode
 set backspace=indent,eol,start
-
-" change buffer path to that of the current file
-" autocmd BufEnter * lcd %:p:h
 
 " highlight cursor line in INSERT mode.
 autocmd InsertLeave * se nocul
 autocmd InsertEnter * se cul
-
-"display tabs and trailing spaces
-"set list
-"set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
 
 "clean trailing spaces
 noremap <silent> <leader>v mv:%s/\s\+$//e<CR>:%s/\t/  /e<CR>`v
@@ -75,10 +73,6 @@ set ttymouse=xterm2
 
 "tell the term has 256 colors
 set t_Co=256
-
-" grep options
-set grepprg=ack
-set grepformat=%f:%l:%m
 
 " assume the /g flag on :s substitutions to replace all matches in a line
 set gdefault
@@ -106,19 +100,21 @@ map <leader>f :CommandTFlush<CR>
 
 " ZenCoding: http://mattn.github.com/zencoding-vim
 let g:user_zen_settings = {
-\  'indentation' : '  ',
-\  'perl' : {
-\    'aliases' : {
-\      'req' : 'require '
-\    },
-\    'snippets' : {
-\      'use' : "use strict\nuse warnings\n\n",
-\      'warn' : "warn \"|\";",
-\    }
-\  }
-\}
+      \  'indentation' : '  ',
+      \  'perl' : {
+      \    'aliases' : {
+      \      'req' : 'require '
+      \    },
+      \    'snippets' : {
+      \      'use' : "use strict\nuse warnings\n\n",
+      \      'warn' : "warn \"|\";",
+      \    }
+      \  }
+      \}
 let g:user_zen_leader_key = '<C-z>'
 let g:user_zen_expandabbr_key = '<C-e>'
+
+nmap ,p gg=G
 
 " Key Mappings
 " reload vimrc
@@ -170,6 +166,8 @@ inoremap <S-up> <esc>v<up>
 inoremap <S-down> <esc>v<down>
 inoremap <S-right> <esc>v<right>
 inoremap <S-left> <esc>v<left>
+" S-home in insert acts like ^ in normal
+inoremap <S-home> <esc>^i
 " unmap shift-k
 vmap K <up>
 nmap K <up>
@@ -181,6 +179,46 @@ imap hh =>
 
 " esc
 imap jj <esc>
+
+"""" System specific or plugin related """"
+
+" grep options
+set grepprg=ack
+set grepformat=%f:%l:%m
+
+" NerdTree
+let NERDTreeShowBookmarks=0
+map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+
+" Tag List
+map <leader>t :TlistToggle<CR>
+
+" BufExplorer
+let g:bufExplorerSortBy='mru'
+
+" Command-T (supercedes FuzzyFinderTextMate)
+let g:CommandTMaxHeight=20
+let g:CommandTScanDotDirectories=0
+set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/richter_data/*.xml
+set wildignore+=**/generated/**,*.cache,bin-debug/**,deploy/**,*.swc,public/system/**,var/vhosts/**
+map <C-t> :CommandT<CR>
+map <leader>f :CommandTFlush<CR>
+
+" ZenCoding: http://mattn.github.com/zencoding-vim
+let g:user_zen_settings = {
+      \  'indentation' : '  ',
+      \  'perl' : {
+      \    'aliases' : {
+      \      'req' : 'require '
+      \    },
+      \    'snippets' : {
+      \      'use' : "use strict\nuse warnings\n\n",
+      \      'warn' : "warn \"|\";",
+      \    }
+      \  }
+      \}
+let g:user_zen_leader_key = '<C-z>'
+let g:user_zen_expandabbr_key = '<C-e>'
 
 " Load matchit (% to bounce from do to end, etc.)
 runtime! macros/matchit.vim
@@ -311,3 +349,25 @@ map <silent> <leader>R :lcd %:p:h<CR>
 
 " Enable closetag macro all the time
 source ~/.vim/macros/closetag.vim
+
+" Usage: 
+" 
+"   :Me ~/path/to/my/new/file.txt
+" 
+" creates /home/username/path/to/my/new with `mkdir -p` if it doesn't exist
+" and then opens file.txt
+" 
+
+function! Mkdire(path)
+  let l:newpath = fnamemodify(expand(a:path), ":p:h")
+  let l:newfile = expand(a:path)
+  if !isdirectory(l:newpath)
+    call mkdir(l:newpath, "p")
+  endif
+  execute "e " . l:newfile
+endfunction
+command! -nargs=1 -complete=file Me call Mkdire(<f-args>)
+
+" you can also automatically call the function before save (on every write)
+" au BufWritePre,FileWritePre * call Mkdire('%')
+
