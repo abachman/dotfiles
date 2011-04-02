@@ -5,4 +5,4 @@ alias psl='cd ~/workspace/psl/trunk'
 alias nodewise='cd ~/projects/nodewise'
 alias xom='cd ~/workspace/xom_bac_v2/rails'
 alias tixato='cd ~/projects/tixato && source ~/projects/tixato/.profile'
-
+alias cortex='cd ~/games/CortexCommand && ./Cortex\ Command.exe'

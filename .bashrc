@@ -15,6 +15,14 @@ export HISTSIZE=100000
 
 if [[ -s /home/adam/.rvm/scripts/rvm ]] ; then source /home/adam/.rvm/scripts/rvm ; fi
 
+# Projects
+export PROJECTS=/home/adam/projects/tixato
+for project in $PROJECTS; do
+  if [ -f $project/.profile ]; then
+    . $project/.profile
+  fi
+done
+
 # REE tuning
 export RUBY_HEAP_MIN_SLOTS=1000000
 export RUBY_HEAP_SLOTS_INCREMENT=250000
@@ -299,3 +307,5 @@ function color_sed() {
 PS1="\[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(ps_scm_f)\[${NONE}\]\n$ "
 PS1="\[${txtgrn}\]\$(~/.rvm/bin/rvm-prompt)\[${NONE}\] $PS1"
 
+export PATH=$HOME/local/bin:$PATH
+export PATH=$HOME/local/bin:$PATH
