@@ -93,8 +93,7 @@ let g:bufExplorerSortBy='mru'
 " Command-T (supercedes FuzzyFinderTextMate)
 let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=0
-set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/richter_data/*.xml
-set wildignore+=**/generated/**,*.cache,bin-debug/**,deploy/**,*.swc,public/system/**,app/mobile/**
+set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/system/**,app/mobile/**
 map <C-t> :CommandT<CR>
 map <leader>f :CommandTFlush<CR>
 
@@ -180,6 +179,9 @@ imap hh =>
 " esc
 imap jj <esc>
 
+" titleize selection (linewise, crap)
+" vnoremap <silent> T :s/\v^.\|<%(is>\|in>\|the>\|at>\|with>\|a>)@!./\U&/<CR>:nohlsearch<Bar>:echo<CR>
+
 """" System specific or plugin related """"
 
 " grep options
@@ -245,7 +247,8 @@ function! WrapMode()
   setlocal wrap
   setlocal lbr
   setlocal foldmethod=manual
-  setlocal spell
+  "setlocal spell
+
   " treat long wrapped lines (paragraphs) like short lines.
   " i.e., directional keys move directly up and down visually
   " and movement keys wrap to the next visual line, not the
