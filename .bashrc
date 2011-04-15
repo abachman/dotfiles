@@ -18,6 +18,14 @@ set -o vi
 
 if [[ -s /home/adam/.rvm/scripts/rvm ]] ; then source /home/adam/.rvm/scripts/rvm ; fi
 
+# Projects
+export PROJECTS=/home/adam/projects/tixato
+for project in $PROJECTS; do
+  if [ -f $project/.profile ]; then
+    . $project/.profile
+  fi
+done
+
 # REE tuning
 export RUBY_HEAP_MIN_SLOTS=1000000
 export RUBY_HEAP_SLOTS_INCREMENT=250000

@@ -1,11 +1,6 @@
 # THIS STUFF IS ONLY USEFUL TO ME, @abachman
-alias simplify='cd ~/workspace/simplifymd/erx_rcopia'
 alias laterlist='cd ~/projects/laterlist'
-alias psl='cd ~/workspace/psl/cms'
 alias nodewise='cd ~/projects/nodewise'
-alias xom='cd ~/workspace/xom_bac_v2/rails'
 alias tixato='cd ~/projects/tixato && source ~/projects/tixato/.profile'
-alias kpd='cd ~/workspace/kpd/trunk'
-alias spotcrime='cd ~/workspace/spotcrime/api'
+alias cortex='cd ~/games/CortexCommand && ./Cortex\ Command.exe'
 alias keyserve='cd ~/workspace/keyserve'
-alias cbcore='cd ~/workspace/CBCore'
