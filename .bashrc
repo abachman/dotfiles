@@ -116,10 +116,8 @@ if [ "$TERM" != "dumb" ] && [ -x /usr/bin/dircolors ]; then
   eval "`dircolors -b`"
   alias ls='ls --color=auto'
   alias dir='ls --color=auto --format=vertical'
-  alias rgrep='rgrep --color --exclude-dir=.svn'
-  alias grep='grep --color --exclude-dir=.svn'
-  alias rgrepn='rgrep -n --color --exclude-dir=.svn'
-  alias grepn='grep -n --color --exclude-dir=.svn'
+  alias rgrep='rgrep --color --exclude-dir=.svn -n'
+  alias grep='grep --color --exclude-dir=.svn -n'
 fi
 
 # some more aliases
