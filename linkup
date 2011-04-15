@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 mv ~/.vimrc{,.bak}
-ln -s `pwd`/.vimrc /home/$USER/.vimrc
+ln -s `pwd`/.vimrc $HOME/.vimrc
 mv ~/.gvimrc{,.bak}
-ln -s `pwd`/.gvimrc /home/$USER/.gvimrc
+ln -s `pwd`/.gvimrc $HOME/.gvimrc
 mv ~/.bashrc{,.bak}
-ln -s `pwd`/.bashrc /home/$USER/.bashrc
+ln -s `pwd`/.bashrc $HOME/.bashrc
 mv ~/.screenrc{,.bak}
-ln -s `pwd`/.screenrc /home/$USER/.screenrc
+ln -s `pwd`/.screenrc $HOME/.screenrc
 mv ~/.tmux.conf{,.bak}
-ln -s `pwd`/.tmux.conf /home/$USER/.tmux.conf
+ln -s `pwd`/.tmux.conf $HOME/.tmux.conf
 mv ~/.projects{,.bak}
-ln -s `pwd`/.projects /home/$USER/.projects
+ln -s `pwd`/.projects $HOME/.projects
