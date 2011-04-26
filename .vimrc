@@ -9,7 +9,12 @@ filetype plugin indent on                  " Enable filetype-specific indenting 
 set showmatch "show matching surround
 set hidden    "allow hiding buffers without save
 
-colorscheme desert
+set background=dark
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
+let g:solarized_contrast="high"
+colorscheme solarized
+" colorscheme desert
 
 " don't leave backup files scattered about.
 set updatecount=0
@@ -84,18 +89,55 @@ set scrolloff=3
 let NERDTreeShowBookmarks=0
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
-" Tag List
-map <leader>t :TlistToggle<CR>
-
 " BufExplorer
 let g:bufExplorerSortBy='mru'
 
 " Command-T (supercedes FuzzyFinderTextMate)
 let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=0
+set wildmode=list:longest,list:full
 set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/system/**,app/mobile/**
+map <leader>t :CommandT<CR>
 map <C-t> :CommandT<CR>
 map <leader>f :CommandTFlush<CR>
+
+if has("mac")
+  map <D-w>s <C-w>s      " create window splits with <Command-w>{s,v}
+  map <D-w><D-s> <C-w>s  " in case I fat finger it
+  map <D-w>q <C-w>q
+  map <D-w><D-q> <C-w>q
+  map <D-w>v <C-w>v     
+  map <D-w><D-v> <C-w>v  
+  imap <D-w>s <C-w>s      " create window splits with <Command-w>{s,v}
+  imap <D-w><D-s> <C-w>s  " in case I fat finger it
+  imap <D-w>q <C-w>q
+  imap <D-w><D-q> <C-w>q
+  imap <D-w>v <C-w>v     
+  imap <D-w><D-v> <C-w>v  
+  imap <D-w> <C-w>
+
+  imap <D-p> <C-p>
+  imap <D-n> <C-n>
+
+  map <D-t> :CommandT<CR>
+  noremap <D-t> :CommandT<CR>
+  inoremap <D-t> :CommandT<CR>
+
+  map <D-s> :w<CR>        " just save
+  imap <D-s> <esc>:w<CR>  " save and return to normal mode (saves a keystroke)
+
+  " navigate splits quickly with the normal movement keys
+  inoremap <D-h> <esc><C-w><C-h>
+  inoremap <D-j> <esc><C-w><C-j>
+  inoremap <D-k> <esc><C-w><C-k>
+  inoremap <D-l> <esc><C-w><C-l>
+  noremap <D-h> <C-w><C-h>
+  noremap <D-j> <C-w><C-j>
+  noremap <D-k> <C-w><C-k>
+  noremap <D-l> <C-w><C-l>
+endif
+
+
 
 " ZenCoding: http://mattn.github.com/zencoding-vim
 let g:user_zen_settings = {
@@ -119,13 +161,15 @@ nmap ,p gg=G
 " reload vimrc
 nmap ,s :source ~/.vimrc<CR>
 nmap ,g :source ~/.gvimrc<CR>
+
 " Tab and Shift-Tab indent and unindent
 inoremap <S-Tab> <esc>mp<<2h`pa
 noremap <Tab> >>
 noremap <S-Tab> <<
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
-" Buffer nav with C-n C-p
+
+" window nav
 inoremap <C-h> <esc><C-w><C-h>
 inoremap <C-j> <esc><C-w><C-j>
 inoremap <C-k> <esc><C-w><C-k>
@@ -149,9 +193,10 @@ nmap <C-a> ggVG
 " CTRL-S is Save
 noremap <C-s> :w<CR>
 inoremap <C-s> <esc>:w<CR>
+
 " ,bd to close buffer without changing window layout.
-nmap <leader>bd :Bclose<CR>
-imap <C-b>d <esc>:Bclose<CR>
+nmap <leader>bd :BufClose<CR>
+imap <C-b>d <esc>:BufClose<CR>
 " select current definition
 nmap <leader>vm <esc>[mmd]MV'd
 " shift up / down moves the cursor
@@ -192,9 +237,6 @@ set grepformat=%f:%l:%m
 let NERDTreeShowBookmarks=0
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
-" Tag List
-map <leader>t :TlistToggle<CR>
-
 " BufExplorer
 let g:bufExplorerSortBy='mru'
 
@@ -225,6 +267,19 @@ let g:user_zen_expandabbr_key = '<C-e>'
 " Load matchit (% to bounce from do to end, etc.)
 runtime! macros/matchit.vim
 
+" gist-vim defaults
+if has("mac")
+  let g:gist_clip_command = 'pbcopy'
+elseif has("unix")
+  let g:gist_clip_command = 'xclip -selection clipboard'
+endif
+let g:gist_detect_filetype = 1
+let g:gist_open_browser_after_post = 1
+
+" Use modeline overrides
+set modeline
+set modelines=10
+
 "For screen.vim send block
 "to SendScreen function
 "(eg Scheme interpreter)
@@ -234,7 +289,11 @@ nmap <C-c><C-c> vip<C-c><C-c>
 
 map <leader>h <esc>:call ProjectionMode()<CR>
 function! ProjectionMode()
-  set gfn=Inconsolata\ 16
+  if has("mac")
+    set gfn=Inconsolata:h16
+  else
+    set gfn=Inconsolata\ 16
+  endif
   set laststatus=0
   set showcmd
 endfunction
