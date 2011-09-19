@@ -12,9 +12,10 @@ set hidden    "allow hiding buffers without save
 set background=dark
 let g:solarized_termcolors=256
 let g:solarized_termtrans=1
-let g:solarized_contrast="high"
+let g:solarized_contrast="hight"
 colorscheme solarized
 " colorscheme desert
+" colorscheme Tomorrow-Night
 
 " don't leave backup files scattered about.
 set updatecount=0
@@ -42,7 +43,6 @@ nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
 
 " Fast editing of the .vimrc
 map <leader>e :e! ~/.vimrc<cr>
-inoremap <leader>e <esc>:e! ~/.vimrc<cr>
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
@@ -59,6 +59,12 @@ set statusline=%t%m\ cwd:\ %{exists('g:loaded_rvm')?rvm#statusline():''}\ %r%{Cu
 " rvm.vim sample
 " set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%{exists('g:loaded_rvm')?rvm#statusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
+" Syntastic
+let g:syntastic_enable_signs=0
+let g:syntastic_auto_jump=0
+let g:syntastic_auto_loc_list=1
+let g:syntastic_disabled_filetypes = ['html', 'xhtml', 'sass', 'scss']
+
 " Intuitive backspacing in insert mode
 set backspace=indent,eol,start
 
@@ -66,10 +72,11 @@ set backspace=indent,eol,start
 autocmd InsertLeave * se nocul
 autocmd InsertEnter * se cul
 
-"clean trailing spaces
+"clean trailing spaces, convert tabs to spaces
 noremap <silent> <leader>v mv:%s/\s\+$//e<CR>:%s/\t/  /e<CR>`v
+" autocmd BufWritePre * :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
 
-"dont continue comments when pushing o/O
+" don't continue comments when pushing o/O
 set formatoptions-=o
 
 "some stuff to get the mouse going in term
@@ -101,19 +108,49 @@ map <leader>t :CommandT<CR>
 map <C-t> :CommandT<CR>
 map <leader>f :CommandTFlush<CR>
 
+" Ack search
+map <leader>a :Ack<space>
+vmap <leader>a "ay:Ack<space><C-r>a<CR>
+map <leader>x :ccl<CR>   " close quickfix buffer
+
+" sessions
+set sessionoptions-=buffers
+
+fu! SaveSess()
+  execute 'call mkdir(%:p:h/.vim)'
+  execute 'mksession! %:p:h/.vim/session.vim'
+endfunction
+
+fu! RestoreSess()
+  if filereadable('%:p:h/.vim/session.vim')
+    execute 'so %:p:h/.vim/session.vim'
+
+    if bufexists(1)
+      for l in range(1, bufnr('$'))
+        if bufwinnr(l) == -1
+          exec 'sbuffer ' . l
+        endif
+      endfor
+    endif
+  endif
+endfunction
+
+autocmd VimLeave * call SaveSess()
+autocmd VimEnter * call RestoreSess()
+
 if has("mac")
   map <D-w>s <C-w>s      " create window splits with <Command-w>{s,v}
   map <D-w><D-s> <C-w>s  " in case I fat finger it
   map <D-w>q <C-w>q
   map <D-w><D-q> <C-w>q
-  map <D-w>v <C-w>v     
-  map <D-w><D-v> <C-w>v  
+  map <D-w>v <C-w>v
+  map <D-w><D-v> <C-w>v
   imap <D-w>s <C-w>s      " create window splits with <Command-w>{s,v}
   imap <D-w><D-s> <C-w>s  " in case I fat finger it
   imap <D-w>q <C-w>q
   imap <D-w><D-q> <C-w>q
-  imap <D-w>v <C-w>v     
-  imap <D-w><D-v> <C-w>v  
+  imap <D-w>v <C-w>v
+  imap <D-w><D-v> <C-w>v
   imap <D-w> <C-w>
 
   imap <D-p> <C-p>
@@ -122,6 +159,9 @@ if has("mac")
   map <D-t> :CommandT<CR>
   noremap <D-t> :CommandT<CR>
   inoremap <D-t> :CommandT<CR>
+
+  " paste current yank buffer
+  inoremap <D-V> <esc>""pi
 
   map <D-s> :w<CR>        " just save
   imap <D-s> <esc>:w<CR>  " save and return to normal mode (saves a keystroke)
@@ -135,9 +175,13 @@ if has("mac")
   noremap <D-j> <C-w><C-j>
   noremap <D-k> <C-w><C-k>
   noremap <D-l> <C-w><C-l>
+
+  " esc
+  inoremap <D-[> <esc>
+
+  " format paragraph
+  map <D-p> vipgq
 endif
-
-
 
 " ZenCoding: http://mattn.github.com/zencoding-vim
 let g:user_zen_settings = {
@@ -155,12 +199,13 @@ let g:user_zen_settings = {
 let g:user_zen_leader_key = '<C-z>'
 let g:user_zen_expandabbr_key = '<C-e>'
 
-nmap ,p gg=G
+" prettify
+nmap <leader>p gg=G
 
 " Key Mappings
 " reload vimrc
-nmap ,s :source ~/.vimrc<CR>
-nmap ,g :source ~/.gvimrc<CR>
+nmap <leader>r :source ~/.vimrc<CR>
+nmap <leader>g :source ~/.gvimrc<CR>
 
 " Tab and Shift-Tab indent and unindent
 inoremap <S-Tab> <esc>mp<<2h`pa
@@ -194,7 +239,15 @@ nmap <C-a> ggVG
 noremap <C-s> :w<CR>
 inoremap <C-s> <esc>:w<CR>
 
+" leader s also saves
+noremap <leader>s :w<CR>
+inoremap <leader><leader>s <esc>:w<CR>
+
+" in case of fatfinger
+command! W :w
+
 " ,bd to close buffer without changing window layout.
+let g:BufClose_AltBuffer = '"#"' " make sure bufclose doesn't create blank buffers
 nmap <leader>bd :BufClose<CR>
 imap <C-b>d <esc>:BufClose<CR>
 " select current definition
@@ -228,10 +281,6 @@ imap jj <esc>
 " vnoremap <silent> T :s/\v^.\|<%(is>\|in>\|the>\|at>\|with>\|a>)@!./\U&/<CR>:nohlsearch<Bar>:echo<CR>
 
 """" System specific or plugin related """"
-
-" grep options
-set grepprg=ack
-set grepformat=%f:%l:%m
 
 " NerdTree
 let NERDTreeShowBookmarks=0
@@ -334,11 +383,13 @@ augroup myfiletypes
   autocmd BufRead *.mxml set filetype=mxml
   autocmd BufRead *.rtex set filetype=tex
   autocmd BufRead *.clj set filetype=clojure
+  autocmd BufRead *.jst set filetype=jst
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile *.ru set filetype=ruby
   autocmd BufRead,BufNewFile Gemfile set filetype=ruby
   autocmd BufRead,BufNewFile Rakefile set filetype=ruby
   autocmd BufRead,BufNewFile Capfile set filetype=ruby
+  autocmd BufRead,BufNewFile Guardfile set filetype=ruby
   autocmd BufRead,BufNewFile *.scss  set filetype=scss
   autocmd FileType java,c,cpp,c++ call s:MyCLikeSettings()
   autocmd FileType ruby,eruby call s:MyRubySettings()
@@ -346,7 +397,6 @@ augroup myfiletypes
   autocmd FileType python call s:MyPythonSettings()
   autocmd FileType markdown call s:MyMarkdownSettings()
   autocmd FileType clojure call s:MyClojureSettings()
-  autocmd FileType html,xhtml source ~/.vim/ftplugin/zencoding.vim
   autocmd FileType actionscript,mxml call s:MyFlexSettings()
 augroup END
 
@@ -410,15 +460,18 @@ map <silent> <leader>r :if exists("b:rails_root")<CR>:Rlcd<CR>:endif<CR>
 map <silent> <leader>R :lcd %:p:h<CR>
 
 " Enable closetag macro all the time
+let b:unaryTagsStack=""
+let b:closetag_html_style=1
+let b:closetag_disable_synID=1
 source ~/.vim/macros/closetag.vim
 
-" Usage: 
-" 
+" Usage:
+"
 "   :Me ~/path/to/my/new/file.txt
-" 
+"
 " creates /home/username/path/to/my/new with `mkdir -p` if it doesn't exist
 " and then opens file.txt
-" 
+"
 
 function! Mkdire(path)
   let l:newpath = fnamemodify(expand(a:path), ":p:h")

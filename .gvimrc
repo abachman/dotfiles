@@ -14,18 +14,20 @@ nmap <C-F11> :if &guioptions=~'m' \| set guioptions-=m \| else \| set guioptions
 nmap <C-F7> :if &guioptions=~'r' \| set guioptions-=r \| else \| set guioptions+=r \| endif<CR>
 
 if has("mac")
-  set gfn=Menlo:h11
+  set gfn=Menlo:h12
+  " set gfn=Terminus:h14
+  " set gfn=Inconsolata:h14
 else
   set gfn=Terminus\ 9
-  " set gfn=Inconsolata\ 12
 end
 
 "colorscheme railscasts
 "colorscheme vividchalk
 set background=dark
 let g:solarized_contrast="high"
-" colorscheme desert
 colorscheme solarized
+" colorscheme desert
+" colorscheme Tomorrow-Night
 
 " key unbinding
 if has("mac")
