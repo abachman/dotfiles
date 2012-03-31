@@ -397,6 +397,7 @@ augroup myfiletypes
   autocmd BufRead *.rtex set filetype=tex
   autocmd BufRead *.clj set filetype=clojure
   autocmd BufRead *.jst set filetype=jst
+  autocmd BufRead *.mustache set filetype=mustache
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile *.ru set filetype=ruby
   autocmd BufRead,BufNewFile Gemfile set filetype=ruby
