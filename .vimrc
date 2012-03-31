@@ -116,7 +116,7 @@ let g:bufExplorerSortBy='mru'
 let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=0
 set wildmode=list:longest,list:full
-set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/system/**,app/mobile/**
+set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/system/**,app/mobile/**,vendor/bundle/**
 map <leader>t :CommandT<CR>
 map <C-t> :CommandT<CR>
 map <leader>f :CommandTFlush<CR>
