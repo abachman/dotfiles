@@ -1,5 +1,8 @@
 set nocompatible                           " We're running Vim, not Vi!
 
+" use proper ruby
+let g:ruby_path=$RUBY_BIN
+
 " system specific
 call pathogen#runtime_append_all_bundles() " autoload .vim/bundle
 
