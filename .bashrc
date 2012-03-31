@@ -27,16 +27,28 @@ for project in $PROJECTS; do
 done
 
 # REE tuning
-export RUBY_HEAP_MIN_SLOTS=1000000
+export RUBY_HEAP_MIN_SLOTS=500000
 export RUBY_HEAP_SLOTS_INCREMENT=250000
 export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
-export RUBY_GC_MALLOC_LIMIT=100000000
-export RUBY_HEAP_FREE_MIN=1000000
+export RUBY_GC_MALLOC_LIMIT=50000000
+# export RUBY_HEAP_FREE_MIN=100000
+
+# twitter's settings
+# export RUBY_HEAP_MIN_SLOTS=500000
+# export RUBY_HEAP_SLOTS_INCREMENT=250000
+# export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
+# export RUBY_GC_MALLOC_LIMIT=50000000
 
 # system
-if [ "$OSTYPE" = "darwin10.0" ]; then
+if [ "$OSTYPE" = "darwin11" ]; then
+  export NODE_PATH=/Users/adam/node_modules
   export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH
+
+  # Brew fix for mysql
   export PATH=$PATH:$(brew --prefix mysql)/bin
+
+  # ruby bin, so that VIM works properly
+  export RUBY_BIN=`which ruby | sed 's/ruby$//'`
 fi
 
 export PATH=$PATH:$HOME/projects/better-console/bin:$HOME/projects/johns-toolbox
@@ -51,7 +63,8 @@ shopt -s checkwinsize
 
 stty stop undef
 
-if [ ! "$OSTYPE" = "darwin10.0" ]; then
+if [ ! "$OSTYPE" = "darwin11" ]; then
+  # linux
 
   # make less more friendly for non-text input files, see lesspipe(1)
   [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -105,11 +118,17 @@ if [ ! "$OSTYPE" = "darwin10.0" ]; then
     alias grep='grep --color -n'
   fi
 else
+  # mac osx
   alias ls='ls -G'
   alias dir='ls -G --format=vertical'
   alias rgrep='rgrep --color -n'
   alias grep='grep --color -n'
-fi 
+  alias git=hub
+  alias b='bundle exec'
+
+  export HOMEBREW_USE_GCC=1
+  export HOMEBREW_VERBOSE=1
+fi
 
 # some more aliases
 alias ll='ls -l'
@@ -130,8 +149,8 @@ rr() {
   until [[ "$(ls)" =~ $rr_expression  ]]; do
     cd ..
     if [ $(pwd) = / ]; then
-      FAILED_RR=1  
-      break 
+      FAILED_RR=1
+      break
     fi
   done
   if [ $FAILED_RR -eq 1 ]; then
@@ -139,7 +158,7 @@ rr() {
   else
     echo "going to `pwd`"
   fi
-} 
+}
 
 # simple functions
 psgrep() {
@@ -152,10 +171,14 @@ timestamp() {
   date +%Y%m%d%H%M%S
 }
 
-if [ "$OSTYPE" = "darwin10.0" ]; then
+if [ "$OSTYPE" = "darwin11" ]; then
   # copy pwd to clipboard, cd to clipboard (poor man's bookmark)
   alias pp='pwd | pbcopy'
   alias pc='cd `pbpaste`'
+
+  if [ -f `brew --prefix`/etc/bash_completion ]; then
+    . `brew --prefix`/etc/bash_completion
+  fi
 else
   # copy pwd to clipboard, cd to clipboard (poor man's bookmark)
   alias pp='pwd | xsel -b'
@@ -186,6 +209,7 @@ fi
 export COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
 source $HOME/projects/johns-toolbox/gen-autocomplete.sh
 source ~/projects/better-console/completion/git-completion.bash
+source ~/projects/better-console/completion/bundler-completion.sh
 
 ## COLORS
 txtblk='\e[0;30m' # Black - Regular
@@ -214,7 +238,7 @@ find_svn_root() {
   fi
 
   current="$(pwd)"
-  while [ 1 -eq 1 ]; do 
+  while [ 1 -eq 1 ]; do
     svn info ${current}/.. 2>&1 | grep -q 'is not a working copy' && break
     current=${current}/..
   done
@@ -264,19 +288,19 @@ find_svn_root() {
 #         r=""
 #         b=$(git symbolic-ref HEAD 2>/dev/null )
 #       fi
-# 
+#
 #       if git status | grep -q '^# Changed but not updated:' ; then
 #         a="${a}⚡"
 #       fi
-# 
+#
 #       if git status | grep -q '^# Changes to be committed:' ; then
 #         a="${a}+"
 #       fi
-# 
+#
 #       if git status | grep -q '^# Untracked files:' ; then
 #         a="${a}?"
 #       fi
-# 
+#
 #       b=${b#refs/heads/}
 #       b=${b// }
 #       [[ -n "${r}${b}${a}" ]] && s="(${r:+${r}:}${b}${a:+ ${a}})"
@@ -302,3 +326,5 @@ function color_sed() {
 
 PS1="\[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(__git_ps1 '(%s)')\[${NONE}\]\n$ "
 PS1="\[${txtgrn}\]\$(~/.rvm/bin/rvm-prompt)\[${NONE}\] $PS1"
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
