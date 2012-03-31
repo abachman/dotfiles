@@ -58,15 +58,66 @@ endfunction
 " Always show status line
 set laststatus=2
 " Custom Status Line
-set statusline=%t%m\ cwd:\ %{exists('g:loaded_rvm')?rvm#statusline():''}\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
-" rvm.vim sample
+" set statusline=%t%m\ cwd:\ %{exists('g:loaded_rvm')?rvm#statusline():''}\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
 " set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%{exists('g:loaded_rvm')?rvm#statusline():''}%=%-16(\ %l,%c-%v\ %)%P
+
+"" from: http://amix.dk/vim/vimrc.html
+"" Really useful!
+"" In visual mode when you press * or # to search for the current selection
+"vnoremap <silent> * :call VisualSearch('f')<CR>
+"vnoremap <silent> # :call VisualSearch('b')<CR>
+"
+"" From an idea by Michael Naumann
+"function! VisualSearch(direction) range
+"    let l:saved_reg = @"
+"    execute "normal! vgvy"
+"
+"    let l:pattern = escape(@", '\\/.*$^~[]')
+"    let l:pattern = substitute(l:pattern, "\n$", "", "")
+"
+"    if a:direction == 'b'
+"        execute "normal ?" . l:pattern . "^M"
+"    elseif a:direction == 'f'
+"        execute "normal /" . l:pattern . "^M"
+"    endif
+"
+"    let @/ = l:pattern
+"    let @" = l:saved_reg
+"endfunction
+"
+"" Persistent undo
+"try
+"  set undodir=~/.vim_runtime/undodir
+"  set undofile
+"catch
+"endtry
+
+" simpler BufClose
+command! Bclose call <SID>BufcloseCloseIt()
+function! <SID>BufcloseCloseIt()
+   let l:currentBufNum = bufnr("%")
+   let l:alternateBufNum = bufnr("#")
+
+   if buflisted(l:alternateBufNum)
+     buffer #
+   else
+     bnext
+   endif
+
+   if bufnr("%") == l:currentBufNum
+     new
+   endif
+
+   if buflisted(l:currentBufNum)
+     execute("bdelete! ".l:currentBufNum)
+   endif
+endfunction
 
 " Syntastic
 let g:syntastic_enable_signs=0
 let g:syntastic_auto_jump=0
 let g:syntastic_auto_loc_list=1
-let g:syntastic_disabled_filetypes = ['html', 'xhtml', 'sass', 'scss']
+let g:syntastic_disabled_filetypes = ['html', 'xhtml', 'sass', 'scss', 'feature']
 
 " Intuitive backspacing in insert mode
 set backspace=indent,eol,start
@@ -126,30 +177,6 @@ map <leader>a :Ack<space>
 vmap <leader>a "ay:Ack<space><C-r>a<CR>
 map <leader>x :ccl<CR>   " close quickfix buffer
 
-" sessions
-set sessionoptions-=buffers
-
-fu! SaveSess()
-  execute 'call mkdir(%:p:h/.vim)'
-  execute 'mksession! %:p:h/.vim/session.vim'
-endfunction
-
-fu! RestoreSess()
-  if filereadable('%:p:h/.vim/session.vim')
-    execute 'so %:p:h/.vim/session.vim'
-
-    if bufexists(1)
-      for l in range(1, bufnr('$'))
-        if bufwinnr(l) == -1
-          exec 'sbuffer ' . l
-        endif
-      endfor
-    endif
-  endif
-endfunction
-
-autocmd VimLeave * call SaveSess()
-autocmd VimEnter * call RestoreSess()
 
 if has("mac")
   map <D-w>s <C-w>s      " create window splits with <Command-w>{s,v}
