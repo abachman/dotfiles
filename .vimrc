@@ -77,6 +77,16 @@ autocmd InsertEnter * se cul
 
 "clean trailing spaces, convert tabs to spaces
 noremap <silent> <leader>v mv:%s/\s\+$//e<CR>:%s/\t/  /e<CR>`v
+
+" clean trailing spaces automatically before save
+autocmd BufWritePre  *  call StripTrailingWhite()
+
+function! StripTrailingWhite()
+    let l:winview = winsaveview()
+    silent! %s/\s\+$//
+    call winrestview(l:winview)
+endfunction
+
 " autocmd BufWritePre * :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
 
 " don't continue comments when pushing o/O
