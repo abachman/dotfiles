@@ -1,10 +1,14 @@
 --type-add=ruby=.haml,.rake
 --type-add=css=.less,.sass,.scss
 --type-add=js=.coffee,.jst
+--type-add=html=.mustache
 --ignore-dir=app/mobile
 --ignore-dir=public/javascripts/compiled
 --ignore-dir=public/stylesheets/compiled
+--ignore-dir=public/images
 --ignore-dir=public/assets
 --ignore-dir=mockups
 --ignore-dir=public/javascripts/vendor
+--ignore-dir=node_modules
+--nosql
 
