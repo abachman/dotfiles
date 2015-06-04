@@ -4,7 +4,7 @@ set nocompatible                           " We're running Vim, not Vi!
 let g:ruby_path=$RUBY_BIN
 
 " system specific
-call pathogen#runtime_append_all_bundles() " autoload .vim/bundle
+execute pathogen#infect()
 
 syntax on                                  " Enable syntax highlighting
 filetype plugin indent on                  " Enable filetype-specific indenting and plugins
@@ -30,12 +30,15 @@ set nowrap            "no text wrapping
 set selectmode=key    "shifted arrows for selection
 set nonu              "don't show line numbers
 set foldcolumn=0      "little space on the left.
+set nofoldenable      " disable folding
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set ai                "auto indent
 set expandtab
 set smarttab
+set smartcase         " ignore case in searches unless specific case is given
+set wrapscan          " wrap searches
 set ww=<,>,[,],h,l    "wrap on movement keys
 let mapleader = ","
 
@@ -45,7 +48,7 @@ set hl=l:Visual
 nnoremap <silent> <Space> :nohlsearch<Bar>:echo<CR>
 
 " Fast editing of the .vimrc
-map <leader>e :e! ~/.vimrc<cr>
+" map <leader>e :e! ~/.vimrc<cr>
 
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
@@ -57,67 +60,34 @@ endfunction
 
 " Always show status line
 set laststatus=2
-" Custom Status Line
-" set statusline=%t%m\ cwd:\ %{exists('g:loaded_rvm')?rvm#statusline():''}\ %r%{CurDir()}%h%=col:%3v\ line:%4l\ of\ %L\ %p%%
-" set statusline=[%n]\ %<%.99f\ %h%w%m%r%y%{exists('g:loaded_rvm')?rvm#statusline():''}%=%-16(\ %l,%c-%v\ %)%P
 
-"" from: http://amix.dk/vim/vimrc.html
-"" Really useful!
-"" In visual mode when you press * or # to search for the current selection
-"vnoremap <silent> * :call VisualSearch('f')<CR>
-"vnoremap <silent> # :call VisualSearch('b')<CR>
-"
-"" From an idea by Michael Naumann
-"function! VisualSearch(direction) range
-"    let l:saved_reg = @"
-"    execute "normal! vgvy"
-"
-"    let l:pattern = escape(@", '\\/.*$^~[]')
-"    let l:pattern = substitute(l:pattern, "\n$", "", "")
-"
-"    if a:direction == 'b'
-"        execute "normal ?" . l:pattern . "^M"
-"    elseif a:direction == 'f'
-"        execute "normal /" . l:pattern . "^M"
-"    endif
-"
-"    let @/ = l:pattern
-"    let @" = l:saved_reg
-"endfunction
-"
-"" Persistent undo
-"try
-"  set undodir=~/.vim_runtime/undodir
-"  set undofile
-"catch
-"endtry
-
-" simpler BufClose
-command! Bclose call <SID>BufcloseCloseIt()
-function! <SID>BufcloseCloseIt()
-   let l:currentBufNum = bufnr("%")
-   let l:alternateBufNum = bufnr("#")
-
-   if buflisted(l:alternateBufNum)
-     buffer #
-   else
-     bnext
-   endif
-
-   if bufnr("%") == l:currentBufNum
-     new
-   endif
-
-   if buflisted(l:currentBufNum)
-     execute("bdelete! ".l:currentBufNum)
-   endif
-endfunction
+" objective-c and clang
+" http://objvimmer.com/blog/2012/08/17/objective-c-code-completion-in-vim/
+" https://github.com/Rip-Rip/clang_complete
+let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib'
 
 " Syntastic
 let g:syntastic_enable_signs=0
-let g:syntastic_auto_jump=0
+let g:syntastic_check_on_open=1
 let g:syntastic_auto_loc_list=1
-let g:syntastic_disabled_filetypes = ['html', 'xhtml', 'sass', 'scss', 'feature']
+let g:syntastic_loc_list_height=2
+let g:syntastic_enable_balloons = 0
+
+let g:syntastic_javascript_checkers=['jshint']
+let g:syntastic_coffeescript_checkers=['jshint']
+
+let g:syntastic_mode_map = { 'mode': 'active',
+                           \ 'active_filetypes': ['ruby', 'coffee', 'javascript', 'css', 'less'],
+                           \ 'passive_filetypes': ['html', 'xhtml', 'sass', 'scss', 'erlang'] }
+" let g:syntastic_auto_jump=0
+" let g:syntastic_auto_loc_list=1
+" let g:syntastic_disabled_filetypes = ['html', 'xhtml', 'sass', 'scss', 'feature']
+let g:syntastic_ruby_mri_quiet_messages = { "level": "warnings",
+                                 \ "type": 'style',
+                                 \ "regex": '\mambiguous' }
+
+" let g:syntastic_quiet_messages = { "level": "warnings" }
+
 
 " Intuitive backspacing in insert mode
 set backspace=indent,eol,start
@@ -163,42 +133,79 @@ map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 " BufExplorer
 let g:bufExplorerSortBy='mru'
 
-" Command-T (supercedes FuzzyFinderTextMate)
-let g:CommandTMaxHeight=20
-let g:CommandTScanDotDirectories=0
-set wildmode=list:longest,list:full
-set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/system/**,app/mobile/**,vendor/bundle/**
-map <leader>t :CommandT<CR>
-map <C-t> :CommandT<CR>
-map <leader>f :CommandTFlush<CR>
+"" Command-T (supercedes FuzzyFinderTextMate)
+" let g:CommandTMaxHeight=20
+" let g:CommandTScanDotDirectories=0
+" map <leader>t :CommandT<CR>
+" map <C-t> :CommandT<CR>
+" map <leader>f :CommandTFlush<CR>
+
+" ctrlp (supercedes Command-T)
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlPMixed'
+
+map <leader>f :CtrlPClearCache<CR>
+map <leader>t :CtrlP<CR>
+map <C-t> :CtrlP<CR>
+
+" fuzzy finders ignoring things
+" set wildmode=list:longest,list:full
+set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/system/*,app/mobile/*,vendor/bundle,vendor/bundle/*,node_modules/*,public/assets/*
+
+" 'c' - the directory of the current file.
+" 'r' - the nearest ancestor that contains one of these directories or files: .git .hg .svn .bzr _darcs
+" 'a' - like c, but only if the current working directory outside of CtrlP is not a direct ancestor of the directory of the current file.
+" 0 or '' (empty string) - disable this feature.
+let g:ctrlp_working_path_mode = 'ra'
+
+" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|(node_modules|vendor|app\/mobile|public\/system)',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ 'link': 'some_bad_symbolic_links',
+  \ }
+
+" Use a custom file listing command:
+" let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
+
 
 " Ack search
+let g:ackprg = 'ag --nogroup --nocolor --column -p /Users/adam/.agignore'
 map <leader>a :Ack<space>
 vmap <leader>a "ay:Ack<space><C-r>a<CR>
-map <leader>x :ccl<CR>   " close quickfix buffer
+" close quickfix buffer
+map <leader>x :ccl<CR>
 
 
 if has("mac")
-  map <D-w>s <C-w>s      " create window splits with <Command-w>{s,v}
-  map <D-w><D-s> <C-w>s  " in case I fat finger it
+  " create window splits with <Command-w>{s,v}
+  map <D-w>s <C-w>s
+  " in case I fat finger it
+  map <D-w><D-s> <C-w>s
   map <D-w>q <C-w>q
   map <D-w><D-q> <C-w>q
   map <D-w>v <C-w>v
   map <D-w><D-v> <C-w>v
-  imap <D-w>s <C-w>s      " create window splits with <Command-w>{s,v}
-  imap <D-w><D-s> <C-w>s  " in case I fat finger it
-  imap <D-w>q <C-w>q
-  imap <D-w><D-q> <C-w>q
-  imap <D-w>v <C-w>v
-  imap <D-w><D-v> <C-w>v
+  " create window splits with <Command-w>{s,v}
+  imap <D-w>s <esc><C-w>s
+  " in case I fat finger it
+  imap <D-w><D-s> <esc><C-w>s
+  imap <D-w>q <esc><C-w>q
+  imap <D-w><D-q> <esc><C-w>q
+  imap <D-w>v <esc><C-w>v
+  imap <D-w><D-v> <esc><C-w>v
   imap <D-w> <C-w>
 
   imap <D-p> <C-p>
   imap <D-n> <C-n>
 
-  map <D-t> :CommandT<CR>
-  noremap <D-t> :CommandT<CR>
-  inoremap <D-t> :CommandT<CR>
+  " map <D-t> :CommandT<CR>
+  " noremap <D-t> :CommandT<CR>
+  " inoremap <D-t> :CommandT<CR>
+  map <D-t> :CtrlP<CR>
+  noremap <D-t> :CtrlP<CR>
+  inoremap <D-t> :CtrlP<CR>
+
 
   " paste current yank buffer
   inoremap <D-V> <esc>""pi
@@ -221,26 +228,22 @@ if has("mac")
 
   " format paragraph
   map <D-p> vipgq
-endif
 
-" ZenCoding: http://mattn.github.com/zencoding-vim
-let g:user_zen_settings = {
-      \  'indentation' : '  ',
-      \  'perl' : {
-      \    'aliases' : {
-      \      'req' : 'require '
-      \    },
-      \    'snippets' : {
-      \      'use' : "use strict\nuse warnings\n\n",
-      \      'warn' : "warn \"|\";",
-      \    }
-      \  }
-      \}
-let g:user_zen_leader_key = '<C-z>'
-let g:user_zen_expandabbr_key = '<C-e>'
+  map <leader>w= <C-w>=
+  noremap <leader>w= <C-w>=
+  noremap <D-w>= <C-w>=
+
+  " https://github.com/mattn/emmet-vim formerly Zen-Coding
+  map <D-y> <C-y>
+  map <D-y>, <C-y>,
+endif
 
 " prettify
 nmap <leader>p gg=G
+
+" Magic regex: no need to escape () {} [] . etc
+nnoremap / /\v
+vnoremap / /\v
 
 " Key Mappings
 " reload vimrc
@@ -263,6 +266,7 @@ noremap <C-h> <C-w><C-h>
 noremap <C-j> <C-w><C-j>
 noremap <C-k> <C-w><C-k>
 noremap <C-l> <C-w><C-l>
+
 " Copy paste using system clipboard
 vmap <C-y> "+y
 vmap <C-u> "+p
@@ -287,9 +291,12 @@ inoremap <leader><leader>s <esc>:w<CR>
 command! W :w
 
 " ,bd to close buffer without changing window layout.
-let g:BufClose_AltBuffer = '"#"' " make sure bufclose doesn't create blank buffers
-nmap <leader>bd :BufClose<CR>
-imap <C-b>d <esc>:BufClose<CR>
+" let g:BufClose_AltBuffer = '"#"' " make sure bufclose doesn't create blank buffers
+" nmap <leader>bd :BufClose<CR>
+" imap <C-b>d <esc>:BufClose<CR>
+nmap <leader>bd :BW<CR>
+imap <C-b>d <esc>:BW<CR>
+
 " select current definition
 nmap <leader>vm <esc>[mmd]MV'd
 " shift up / down moves the cursor
@@ -321,21 +328,6 @@ imap jj <esc>
 " vnoremap <silent> T :s/\v^.\|<%(is>\|in>\|the>\|at>\|with>\|a>)@!./\U&/<CR>:nohlsearch<Bar>:echo<CR>
 
 """" System specific or plugin related """"
-
-" NerdTree
-let NERDTreeShowBookmarks=0
-map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
-
-" BufExplorer
-let g:bufExplorerSortBy='mru'
-
-" Command-T (supercedes FuzzyFinderTextMate)
-let g:CommandTMaxHeight=20
-let g:CommandTScanDotDirectories=0
-set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/richter_data/*.xml
-set wildignore+=**/generated/**,*.cache,bin-debug/**,deploy/**,*.swc,public/system/**,var/vhosts/**
-map <C-t> :CommandT<CR>
-map <leader>f :CommandTFlush<CR>
 
 " ZenCoding: http://mattn.github.com/zencoding-vim
 let g:user_zen_settings = {
@@ -369,13 +361,6 @@ let g:gist_open_browser_after_post = 1
 set modeline
 set modelines=10
 
-"For screen.vim send block
-"to SendScreen function
-"(eg Scheme interpreter)
-"http://www.vim.org/scripts/script.php?script_id=2711
-vmap <C-c><C-c> :ScreenSend<CR>
-nmap <C-c><C-c> vip<C-c><C-c>
-
 map <leader>h <esc>:call ProjectionMode()<CR>
 function! ProjectionMode()
   if has("mac")
@@ -387,14 +372,14 @@ function! ProjectionMode()
   set showcmd
 endfunction
 
-map <leader>q <esc>:call WrapMode()<CR>
-inoremap <leader>q <esc>:call WrapMode()<CR>
+" map <leader>q <esc>:call WrapMode()<CR>
+" inoremap <leader>q <esc>:call WrapMode()<CR>
 function! WrapMode()
   setlocal formatoptions=tcq
   setlocal textwidth=80
   setlocal wrap
   setlocal lbr
-  setlocal foldmethod=manual
+  "setlocal foldmethod=manual
   "setlocal spell
 
   " treat long wrapped lines (paragraphs) like short lines.
@@ -424,6 +409,7 @@ augroup myfiletypes
   autocmd BufRead *.rtex set filetype=tex
   autocmd BufRead *.clj set filetype=clojure
   autocmd BufRead *.jst set filetype=jst
+  autocmd BufRead *.ejs set filetype=jst
   autocmd BufRead *.mustache set filetype=mustache
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile *.ru set filetype=ruby
@@ -431,14 +417,24 @@ augroup myfiletypes
   autocmd BufRead,BufNewFile Rakefile set filetype=ruby
   autocmd BufRead,BufNewFile Capfile set filetype=ruby
   autocmd BufRead,BufNewFile Guardfile set filetype=ruby
+  autocmd BufRead,BufNewFile *.jbuilder set filetype=ruby
   autocmd BufRead,BufNewFile *.scss  set filetype=scss
   autocmd FileType java,c,cpp,c++ call s:MyCLikeSettings()
+  autocmd FileType objc call s:MyObjcSettings()
   autocmd FileType ruby,eruby call s:MyRubySettings()
   autocmd FileType vim call s:MyVimSettings()
   autocmd FileType python call s:MyPythonSettings()
   autocmd FileType markdown call s:MyMarkdownSettings()
   autocmd FileType clojure call s:MyClojureSettings()
   autocmd FileType actionscript,mxml call s:MyFlexSettings()
+augroup END
+
+augroup myprojectdirs
+  autocmd!
+
+  if has("mac")
+    au! BufRead,BufNewFile /Users/adam/projects/store/* set wildignore+=invoicerator/*
+  endif
 augroup END
 
 " Clear all comment markers (one rule for all languages)
@@ -460,10 +456,13 @@ endfunction
 
 function! s:MyRubySettings()
   set ai sw=2 sts=2 et
+
   "improve autocomplete menu color
   let g:closetag_html_style=1
+
   " Insert comments markers
   map - :s/^/#/<CR>:nohlsearch<CR>
+
   " wrap selected text in ERB escape tag
   vnoremap <leader>m "zdi<%= <C-R>z %><ESC>
 
@@ -478,6 +477,11 @@ function! s:MyClojureSettings()
   let g:vimclojure#HighlightBuiltins=1   " Highlight Clojure's builtins
   let g:vimclojure#ParenRainbow=1        " Rainbow parentheses'!
   let g:vimclojure#DynamicHighlighting=1 " Dynamically highlight functions
+endfunction
+
+function! s:MyObjcSettings()
+  set ai sw=4 sts=4 et
+  let c_no_curly_error = 1
 endfunction
 
 function! s:MyFlexSettings()
