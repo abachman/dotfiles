@@ -66,25 +66,32 @@ set laststatus=2
 " https://github.com/Rip-Rip/clang_complete
 let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib'
 
+" golang
+let g:go_fmt_command = "goimports"
+
 " Syntastic
 let g:syntastic_enable_signs=0
-let g:syntastic_check_on_open=1
+let g:syntastic_check_on_open=0
 let g:syntastic_auto_loc_list=1
-let g:syntastic_loc_list_height=2
-let g:syntastic_enable_balloons = 0
+let g:syntastic_loc_list_height=4
+let g:syntastic_enable_balloons=0
 
 let g:syntastic_javascript_checkers=['jshint']
 let g:syntastic_coffeescript_checkers=['jshint']
 
-let g:syntastic_mode_map = { 'mode': 'active',
-                           \ 'active_filetypes': ['ruby', 'coffee', 'javascript', 'css', 'less'],
-                           \ 'passive_filetypes': ['html', 'xhtml', 'sass', 'scss', 'erlang'] }
+" let g:syntastic_go_checkers = ['golint', 'gotype', 'govet']
+" let g:syntastic_debug = 0
 " let g:syntastic_auto_jump=0
 " let g:syntastic_auto_loc_list=1
 " let g:syntastic_disabled_filetypes = ['html', 'xhtml', 'sass', 'scss', 'feature']
+
+let g:syntastic_mode_map = { 'mode': 'active',
+                           \ 'active_filetypes': ['ruby', 'coffee', 'javascript', 'css', 'less'],
+                           \ 'passive_filetypes': ['html', 'xhtml', 'sass', 'scss', 'erlang'] }
+
 let g:syntastic_ruby_mri_quiet_messages = { "level": "warnings",
-                                 \ "type": 'style',
-                                 \ "regex": '\mambiguous' }
+                                          \ "type": "style",
+                                          \ "regex": '\mambiguous' }
 
 " let g:syntastic_quiet_messages = { "level": "warnings" }
 
@@ -134,7 +141,7 @@ map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 let g:bufExplorerSortBy='mru'
 
 "" Command-T (supercedes FuzzyFinderTextMate)
-" let g:CommandTMaxHeight=20
+" let g:CommandTMaxHeight=2
 " let g:CommandTScanDotDirectories=0
 " map <leader>t :CommandT<CR>
 " map <C-t> :CommandT<CR>
@@ -142,7 +149,7 @@ let g:bufExplorerSortBy='mru'
 
 " ctrlp (supercedes Command-T)
 let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlPMixed'
+let g:ctrlp_cmd = 'CtrlP'
 
 map <leader>f :CtrlPClearCache<CR>
 map <leader>t :CtrlP<CR>
@@ -156,18 +163,19 @@ set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.
 " 'r' - the nearest ancestor that contains one of these directories or files: .git .hg .svn .bzr _darcs
 " 'a' - like c, but only if the current working directory outside of CtrlP is not a direct ancestor of the directory of the current file.
 " 0 or '' (empty string) - disable this feature.
-let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_working_path_mode = ''
 
 " let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|(node_modules|vendor|app\/mobile|public\/system)',
+  \ 'dir':  '\v[\/]\.(git|hg|svn)|(node_modules|vendor|app\/mobile|public\/system|Godeps)',
   \ 'file': '\v\.(exe|so|dll)$',
   \ 'link': 'some_bad_symbolic_links',
   \ }
 
+let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:25,results:25'
+
 " Use a custom file listing command:
 " let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
-
 
 " Ack search
 let g:ackprg = 'ag --nogroup --nocolor --column -p /Users/adam/.agignore'
@@ -175,7 +183,6 @@ map <leader>a :Ack<space>
 vmap <leader>a "ay:Ack<space><C-r>a<CR>
 " close quickfix buffer
 map <leader>x :ccl<CR>
-
 
 if has("mac")
   " create window splits with <Command-w>{s,v}
@@ -241,10 +248,6 @@ endif
 " prettify
 nmap <leader>p gg=G
 
-" Magic regex: no need to escape () {} [] . etc
-nnoremap / /\v
-vnoremap / /\v
-
 " Key Mappings
 " reload vimrc
 nmap <leader>r :source ~/.vimrc<CR>
@@ -299,7 +302,8 @@ imap <C-b>d <esc>:BW<CR>
 
 " select current definition
 nmap <leader>vm <esc>[mmd]MV'd
-" shift up / down moves the cursor
+
+" shift up / down moves the selection cursor
 vmap <S-up> <up>
 vmap <S-down> <down>
 nmap <S-up> V<up>
@@ -310,19 +314,25 @@ inoremap <S-up> <esc>v<up>
 inoremap <S-down> <esc>v<down>
 inoremap <S-right> <esc>v<right>
 inoremap <S-left> <esc>v<left>
+
 " S-home in insert acts like ^ in normal
 inoremap <S-home> <esc>^i
+
 " unmap shift-k
 vmap K <up>
 nmap K <up>
+
 " toggle numbers
 nmap <leader>n :set nonu!<CR>
 
 " hashrocket!
 imap hh =>
 
-" esc
+" esc from insert mode with this uncommon keystroke
 imap jj <esc>
+
+" tabularize on =
+vmap <leader>= :Tabularize /=<CR>
 
 " titleize selection (linewise, crap)
 " vnoremap <silent> T :s/\v^.\|<%(is>\|in>\|the>\|at>\|with>\|a>)@!./\U&/<CR>:nohlsearch<Bar>:echo<CR>
@@ -374,29 +384,64 @@ endfunction
 
 " map <leader>q <esc>:call WrapMode()<CR>
 " inoremap <leader>q <esc>:call WrapMode()<CR>
-function! WrapMode()
-  setlocal formatoptions=tcq
-  setlocal textwidth=80
-  setlocal wrap
-  setlocal lbr
-  "setlocal foldmethod=manual
-  "setlocal spell
 
-  " treat long wrapped lines (paragraphs) like short lines.
-  " i.e., directional keys move directly up and down visually
-  " and movement keys wrap to the next visual line, not the
-  " next line break.
-  map <buffer> <up> gk
-  imap <buffer> <up> <C-o>gk
-  map <buffer> <down> gj
-  imap <buffer> <down> <C-o>gj
-  map <buffer> <home> g<home>
-  imap <buffer> <home> <C-o>g<home>
-  map <buffer> <end> g<end>
-  imap <buffer> <end> <C-o>g<end>
-  map <buffer> j gj
-  map <buffer> k gk
+noremap <silent> <Leader>w :call ToggleWrap()<CR>
+function ToggleWrap()
+  if &wrap
+    echo "Wrap OFF"
+    setlocal nowrap
+    set virtualedit=all
+    silent! nunmap <buffer> <Up>
+    silent! nunmap <buffer> <Down>
+    silent! nunmap <buffer> <Home>
+    silent! nunmap <buffer> <End>
+    silent! iunmap <buffer> <Up>
+    silent! iunmap <buffer> <Down>
+    silent! iunmap <buffer> <Home>
+    silent! iunmap <buffer> <End>
+    silent! ounmap <buffer> j
+    silent! ounmap <buffer> k
+  else
+    echo "Wrap ON"
+    setlocal wrap linebreak nolist
+    set virtualedit=
+    setlocal display+=lastline
+    noremap  <buffer> <silent> <Up>   gk
+    noremap  <buffer> <silent> <Down> gj
+    noremap  <buffer> <silent> <Home> g<Home>
+    noremap  <buffer> <silent> <End>  g<End>
+    inoremap <buffer> <silent> <Up>   <C-o>gk
+    inoremap <buffer> <silent> <Down> <C-o>gj
+    inoremap <buffer> <silent> <Home> <C-o>g<Home>
+    inoremap <buffer> <silent> <End>  <C-o>g<End>
+    onoremap <buffer> <silent> j gj
+    onoremap <buffer> <silent> k gk
+  endif
 endfunction
+
+" function! WrapMode()
+"   setlocal formatoptions=tcq
+"   setlocal textwidth=80
+"   setlocal wrap
+"   setlocal lbr
+"   "setlocal foldmethod=manual
+"   "setlocal spell
+"
+"   " treat long wrapped lines (paragraphs) like short lines.
+"   " i.e., directional keys move directly up and down visually
+"   " and movement keys wrap to the next visual line, not the
+"   " next line break.
+"   map <buffer> <up> gk
+"   imap <buffer> <up> <C-o>gk
+"   map <buffer> <down> gj
+"   imap <buffer> <down> <C-o>gj
+"   map <buffer> <home> g<home>
+"   imap <buffer> <home> <C-o>g<home>
+"   map <buffer> <end> g<end>
+"   imap <buffer> <end> <C-o>g<end>
+"   map <buffer> j gj
+"   map <buffer> k gk
+" endfunction
 
 """""" Filetype Specific Settings
 augroup myfiletypes
@@ -427,6 +472,7 @@ augroup myfiletypes
   autocmd FileType markdown call s:MyMarkdownSettings()
   autocmd FileType clojure call s:MyClojureSettings()
   autocmd FileType actionscript,mxml call s:MyFlexSettings()
+  autocmd FileType go call s:MyGoSettings()
 augroup END
 
 augroup myprojectdirs
@@ -498,6 +544,16 @@ function! s:MyPythonSettings()
   set foldmethod=marker "auto fold
 endfunction
 
+" golang
+function! s:MyGoSettings()
+  " autocmd BufWritePre,FileWritePre *.go :SyntasticCheck
+  " autocmd BufWritePost *.go :SyntasticCheck
+  " autocmd BufWritePost,FileWritePost *.go execute 'GoBuild' | cwindow
+  nnoremap <leader>gi :%! goimports %<CR>
+  nnoremap <leader>gd :GoDef<CR>
+  nnoremap <leader>gs :sp<CR>:GoDef<CR>
+endfunction
+
 " lcd to current rails project root
 map <silent> <leader>r :if exists("b:rails_root")<CR>:Rlcd<CR>:endif<CR>
 
@@ -530,4 +586,11 @@ command! -nargs=1 -complete=file Me call Mkdire(<f-args>)
 
 " you can also automatically call the function before save (on every write)
 " au BufWritePre,FileWritePre * call Mkdire('%')
+
+" Use project-local vim config
+let b:thisdir=expand("%:p:h")
+let b:vim=b:thisdir."/.vim"
+if (filereadable(b:vim))
+    execute "source ".b:vim
+endif
 

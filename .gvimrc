@@ -14,6 +14,7 @@ nmap <C-F11> :if &guioptions=~'m' \| set guioptions-=m \| else \| set guioptions
 nmap <C-F7> :if &guioptions=~'r' \| set guioptions-=r \| else \| set guioptions+=r \| endif<CR>
 
 if has("mac")
+  set noeb vb t_vb=
   set gfn=Menlo:h12
   " set gfn=Terminus:h14
   " set gfn=Inconsolata:h14
