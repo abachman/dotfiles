@@ -1,16 +1,17 @@
+
 # THIS STUFF IS ONLY USEFUL TO ME, @abachman
 alias laterlist='cd ~/projects/laterlist'
 alias nodewise='cd ~/projects/nodewise'
-alias tixato='cd ~/projects/tixato && source ~/projects/tixato/.profile'
-alias t3='cd ~/projects/tixato-rails3 && source ~/projects/tixato/.profile'
-alias t2='cd ~/projects/tixato2 && source ~/projects/tixato2/.profile'
-# alias tixmo='cd ~/projects/tixmo'
-alias boxoffice='cd ~/projects/box_office'
 alias cortex='cd ~/games/CortexCommand && ./Cortex\ Command.exe'
+
 alias keyserve='cd ~/workspace/keyserve'
-alias f53co='cd ~/projects/f53.co'
-alias sales='cd ~/projects/f53sales && source .profile'
+
 alias james='cd ~/projects/james-games/scary-dragon-mining-adventures'
 alias todo='cd ~/Dropbox/documents && mvim todo.txt'
+alias bscape='cd ~/projects/Betascape-2012'
+alias gathergame='cd ~/projects/gather-game'
 
-alias campfire='cd ~/projects/pat-the-campfire-bot && . ~/projects/f53-campfire-bot/.profile'
+alias reticulum='cd ~/projects/reticulum && source ~/projects/reticulum/.profile'
+alias derp='cd ~/projects/derpchat'
+alias cartridge='cd ~/projects/cartridge'
+
