@@ -13,9 +13,6 @@ export HISTCONTROL=ignoreboth
 export HISTFILESIZE=100000000
 export HISTSIZE=100000
 
-# run in vim mode
-# set -o vi
-
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # Load RVM into a shell session *as a function*
 
 # Projects
@@ -26,45 +23,72 @@ for project in $PROJECTS; do
   fi
 done
 
-# REE tuning
-export RUBY_HEAP_MIN_SLOTS=500000
-export RUBY_HEAP_SLOTS_INCREMENT=250000
-export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
-export RUBY_GC_MALLOC_LIMIT=50000000
-# export RUBY_HEAP_FREE_MIN=100000
+export PATH=$PATH:$HOME/projects/better-console/bin:$HOME/projects/johns-toolbox
+export PATH=$HOME/local/bin:$PATH
+export PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
-# twitter's settings
-# export RUBY_HEAP_MIN_SLOTS=500000
-# export RUBY_HEAP_SLOTS_INCREMENT=250000
-# export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
-# export RUBY_GC_MALLOC_LIMIT=50000000
+export EDITOR='mvim -f'
+export GEM_EDITOR='mvim -f'
 
 # system
-if [ "$OSTYPE" = "darwin11" ]; then
-  export NODE_PATH=/Users/adam/node_modules
-  export PATH=$HOME/bin:/usr/local/bin:/usr/local/sbin:$PATH
+if [[ $OSTYPE == darwin* ]]; then
+  # copy pwd to clipboard, cd to clipboard (poor man's bookmark)
+  alias pp='pwd | pbcopy'
+  alias pc='cd `pbpaste`'
+
+  if [ -f `brew --prefix`/etc/bash_completion ]; then
+    . `brew --prefix`/etc/bash_completion
+  fi
+
+  alias npm-exec='PATH=$(npm bin):$PATH'
+  # export NODE_PATH=/Users/adam/node_modules
+  export NODE_PATH=/usr/local/lib/node_modules
+  export PATH=/usr/local/bin:/usr/local/sbin:$HOME/bin:$PATH
+  export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
+
+  export PATH=$PATH:/usr/local/opt/go/libexec/bin
+  export GOPATH=$HOME/go
+  export PATH=$PATH:$GOPATH/bin
+  export PATH=$PATH:/Users/adam/src/go/bin
 
   # Brew fix for mysql
   export PATH=$PATH:$(brew --prefix mysql)/bin
 
+  # Brew fix for mvim
+  export PATH=$PATH:$(brew --prefix macvim)/bin
+
+  # android SDK
+  export PATH=$PATH:$HOME/src/android/sdk/tools
+
+  export CDPATH=".:$HOME:$HOME/projects:$HOME/src:$HOME/projects/sketchbook"
+
   # ruby bin, so that VIM works properly
   export RUBY_BIN=`which ruby | sed 's/ruby$//'`
-fi
 
-export PATH=$PATH:$HOME/projects/better-console/bin:$HOME/projects/johns-toolbox
-export PATH=$HOME/local/bin:$PATH
-export EDITOR='mvim -f'
-export GEM_EDITOR='mvim -f'
+  function pt() {
+    papertrail -f -d 5 $_ | colortail -g papertrail }
+  }
 
+  alias ls='ls -G'
+  alias dir='ls -G --format=vertical'
+  alias rgrep='rgrep --color -n'
+  alias grep='grep --color -n'
+  alias git=hub
+  alias b='bundle exec'
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
+  # COURSERA!
+  export COURSERA_EMAIL=adam.bachman@gmail.com
 
-stty stop undef
+  export ANDROID_SDK=/Users/adam/src/android/sdk
+  export ANDROID_NDK=/Users/adam/src/android/android-ndk-r9
+  export ANDROID_HOME=/Users/adam/src/android/sdk
 
-if [ ! "$OSTYPE" = "darwin11" ]; then
+else
   # linux
+
+  # copy pwd to clipboard, cd to clipboard (poor man's bookmark)
+  alias pp='pwd | xsel -b'
+  alias pc='cd `xsel -b`'
 
   # make less more friendly for non-text input files, see lesspipe(1)
   [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -109,6 +133,7 @@ if [ ! "$OSTYPE" = "darwin11" ]; then
   *)
     ;;
   esac
+
   # enable color support of ls and also add handy aliases
   if [ "$TERM" != "dumb" ] && [ -x /usr/bin/dircolors ]; then
     eval "`dircolors -b`"
@@ -117,18 +142,13 @@ if [ ! "$OSTYPE" = "darwin11" ]; then
     alias rgrep='rgrep --color -n'
     alias grep='grep --color -n'
   fi
-else
-  # mac osx
-  alias ls='ls -G'
-  alias dir='ls -G --format=vertical'
-  alias rgrep='rgrep --color -n'
-  alias grep='grep --color -n'
-  alias git=hub
-  alias b='bundle exec'
-
-  export HOMEBREW_USE_GCC=1
-  export HOMEBREW_VERBOSE=1
 fi
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+stty stop undef
 
 # some more aliases
 alias ll='ls -l'
@@ -140,6 +160,7 @@ alias sz='du -cksh * | sort -rn | head -11'
 alias con='script/console'
 source ~/.projects
 
+# Navigate to the root directory of the current Ruby on Rails project
 rr() {
   CURRENT_PWD=`pwd`
   FAILED_RR=0
@@ -171,32 +192,9 @@ timestamp() {
   date +%Y%m%d%H%M%S
 }
 
-if [ "$OSTYPE" = "darwin11" ]; then
-  # copy pwd to clipboard, cd to clipboard (poor man's bookmark)
-  alias pp='pwd | pbcopy'
-  alias pc='cd `pbpaste`'
-
-  if [ -f `brew --prefix`/etc/bash_completion ]; then
-    . `brew --prefix`/etc/bash_completion
-  fi
-else
-  # copy pwd to clipboard, cd to clipboard (poor man's bookmark)
-  alias pp='pwd | xsel -b'
-  alias pc='cd `xsel -b`'
-fi
-
 ## Rake with RAILS_ENV=test
 alias raket="rake RAILS_ENV=test"
 alias rakec="rake RAILS_ENV=cucumber"
-
-# color diffs for SVN
-function svn-diff () {
-  if [ "$1" != "" ]; then
-    svn diff $@ | colordiff;
-  else
-    svn diff | colordiff;
-  fi
-}
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -208,7 +206,8 @@ fi
 ## Autocomplete tasks
 export COMP_WORDBREAKS=${COMP_WORDBREAKS//:}
 source $HOME/projects/johns-toolbox/gen-autocomplete.sh
-source ~/projects/better-console/completion/git-completion.bash
+# source ~/projects/better-console/completion/git-completion.bash
+source /usr/local/etc/bash_completion.d/git-prompt.sh
 source ~/projects/better-console/completion/bundler-completion.sh
 
 ## COLORS
@@ -245,73 +244,6 @@ find_svn_root() {
   echo $(cd "$current"; pwd)
 }
 
-# ps_scm_f() {
-#   _VCS=
-#   local s=
-#   if [[ -d ".svn" ]] ; then
-#     local r=$(svn info | sed -n -e '/^Revision: \([0-9]*\).*$/s//\1/p' )
-#     local root=$(find_svn_root)
-#     local mod_symbol=$(svn status --ignore-externals | grep -v '^?' | grep -q -v '^X' && echo -n "⚡" )
-#     local num_mod=$(svn st $root | grep -c ^M)
-#     local num_add=$(svn st $root | grep -c ^A)
-#     local num_del=$(svn st $root | grep -c ^D)
-#     if [ -n "$mod_symbol" ]; then
-#       s="(${r} ${num_mod} ${num_add} ${num_del} ${mod_symbol})"
-#     else
-#       s="(${r})"
-#     fi
-#   else
-#     local d=$(git rev-parse --git-dir 2>/dev/null ) b= r= a=
-#     if [[ -n "${d}" ]] ; then
-#       if [[ -d "${d}/../.dotest" ]] ; then
-#         if [[ -f "${d}/../.dotest/rebase" ]] ; then
-#           r="rebase"
-#         elif [[ -f "${d}/../.dotest/applying" ]] ; then
-#           r="am"
-#         else
-#           r="???"
-#         fi
-#         b=$(git symbolic-ref HEAD 2>/dev/null )
-#       elif [[ -f "${d}/.dotest-merge/interactive" ]] ; then
-#         r="rebase-i"
-#         b=$(<${d}/.dotest-merge/head-name)
-#       elif [[ -d "${d}/../.dotest-merge" ]] ; then
-#         r="rebase-m"
-#         b=$(<${d}/.dotest-merge/head-name)
-#       elif [[ -f "${d}/MERGE_HEAD" ]] ; then
-#         r="merge"
-#         b=$(git symbolic-ref HEAD 2>/dev/null )
-#       elif [[ -f "${d}/BISECT_LOG" ]] ; then
-#         r="bisect"
-#         b=$(git symbolic-ref HEAD 2>/dev/null )"???"
-#       else
-#         r=""
-#         b=$(git symbolic-ref HEAD 2>/dev/null )
-#       fi
-#
-#       if git status | grep -q '^# Changed but not updated:' ; then
-#         a="${a}⚡"
-#       fi
-#
-#       if git status | grep -q '^# Changes to be committed:' ; then
-#         a="${a}+"
-#       fi
-#
-#       if git status | grep -q '^# Untracked files:' ; then
-#         a="${a}?"
-#       fi
-#
-#       b=${b#refs/heads/}
-#       b=${b// }
-#       [[ -n "${r}${b}${a}" ]] && s="(${r:+${r}:}${b}${a:+ ${a}})"
-#     fi
-#   fi
-#   s="${s}${ACTIVE_COMPILER}"
-#   s="${s:+${s}}"
-#   _VCS=$s
-#   echo -en $s # (eval "echo \"$_VCS\"")
-# }
-
 # git prompt variables
 GIT_PS1_SHOWDIRTYSTATE=true
 # GIT_PS1_SHOWSTASHSTATE=true
@@ -327,4 +259,6 @@ function color_sed() {
 PS1="\[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(__git_ps1 '(%s)')\[${NONE}\]\n$ "
 PS1="\[${txtgrn}\]\$(~/.rvm/bin/rvm-prompt)\[${NONE}\] $PS1"
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
