@@ -7,6 +7,7 @@
 --ignore-dir=public/stylesheets/compiled
 --ignore-dir=public/images
 --ignore-dir=public/assets
+--ignore-dir=Godeps/
 --ignore-dir=mockups
 --ignore-dir=public/javascripts/vendor
 --ignore-dir=node_modules
