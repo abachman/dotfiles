@@ -69,6 +69,17 @@ let g:clang_library_path = '/Applications/Xcode.app/Contents/Developer/Toolchain
 " golang
 let g:go_fmt_command = "goimports"
 
+" javascript js
+let g:javascript_enable_domhtmlcss = 1
+let g:jsx_ext_required = 1
+
+" markdown / Pencil
+let g:vim_markdown_frontmatter = 1 " jekyll
+let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
+let g:markdown_fenced_languages = ['html', 'python', 'javascript', 'ruby', 'bash=sh']
+" To disable markdown syntax concealing add the following to your vimrc:
+" let g:markdown_syntax_conceal = 0
+
 " Syntastic
 let g:syntastic_enable_signs=0
 let g:syntastic_check_on_open=0
@@ -76,7 +87,7 @@ let g:syntastic_auto_loc_list=1
 let g:syntastic_loc_list_height=4
 let g:syntastic_enable_balloons=0
 
-let g:syntastic_javascript_checkers=['jshint']
+let g:syntastic_javascript_checkers=['eslint']
 let g:syntastic_coffeescript_checkers=['jshint']
 
 " let g:syntastic_go_checkers = ['golint', 'gotype', 'govet']
@@ -382,8 +393,10 @@ function! ProjectionMode()
   set showcmd
 endfunction
 
-" map <leader>q <esc>:call WrapMode()<CR>
-" inoremap <leader>q <esc>:call WrapMode()<CR>
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd call pencil#init()
+augroup END
 
 noremap <silent> <Leader>w :call ToggleWrap()<CR>
 function ToggleWrap()
@@ -469,10 +482,17 @@ augroup myfiletypes
   autocmd FileType ruby,eruby call s:MyRubySettings()
   autocmd FileType vim call s:MyVimSettings()
   autocmd FileType python call s:MyPythonSettings()
-  autocmd FileType markdown call s:MyMarkdownSettings()
   autocmd FileType clojure call s:MyClojureSettings()
   autocmd FileType actionscript,mxml call s:MyFlexSettings()
   autocmd FileType go call s:MyGoSettings()
+  autocmd FileType markdown call s:MyMarkdownSettings()
+augroup END
+
+augroup myprojects
+  " Clear old autocmds in group
+  autocmd!
+
+  autocmd BufNewFile,BufRead /Users/adam/projects/adafruit/io-node/* set background=light
 augroup END
 
 augroup myprojectdirs
@@ -489,10 +509,6 @@ map <leader>_ :s/^\/\/\\|^--\\|^> \\|^[#"%!;]//<CR>:nohlsearch<CR>
 function! s:MyCLikeSettings()
   " Insert comments markers
   map - :s/^/\/\//<CR>:nohlsearch<CR>
-endfunction
-
-function! s:MyMarkdownSettings()
-  set ai formatoptions=tcroqn2 comments=n:>
 endfunction
 
 function! s:MyVimSettings()
@@ -552,6 +568,17 @@ function! s:MyGoSettings()
   nnoremap <leader>gi :%! goimports %<CR>
   nnoremap <leader>gd :GoDef<CR>
   nnoremap <leader>gs :sp<CR>:GoDef<CR>
+endfunction
+
+function s:MyMarkdownSettings()
+  setlocal autoindent
+  setlocal colorcolumn=0
+  setlocal linebreak
+  setlocal nonumber
+  setlocal shiftwidth=4
+  setlocal spell
+  setlocal tabstop=4
+  setlocal wrap
 endfunction
 
 " lcd to current rails project root
