@@ -24,6 +24,7 @@ colorscheme solarized
 set updatecount=0
 set nobackup
 set nowritebackup
+set backupcopy=yes
 " set dir=~/tmp       " swap file storage directory
 
 set nowrap            "no text wrapping
@@ -486,13 +487,7 @@ augroup myfiletypes
   autocmd FileType actionscript,mxml call s:MyFlexSettings()
   autocmd FileType go call s:MyGoSettings()
   autocmd FileType markdown call s:MyMarkdownSettings()
-augroup END
 
-augroup myprojects
-  " Clear old autocmds in group
-  autocmd!
-
-  autocmd BufNewFile,BufRead /Users/adam/projects/adafruit/io-node/* set background=light
 augroup END
 
 augroup myprojectdirs
@@ -501,6 +496,10 @@ augroup myprojectdirs
   if has("mac")
     au! BufRead,BufNewFile /Users/adam/projects/store/* set wildignore+=invoicerator/*
   endif
+
+  " autocmd BufNewFile,BufRead /Users/adam/projects/adafruit/io-node/* set background=light
+  " au BufWinLeave /Users/adam/projects/adafruit/io-api/*.json mkview
+  " au BufWinEnter /Users/adam/projects/adafruit/io-api/*.json silent loadview
 augroup END
 
 " Clear all comment markers (one rule for all languages)
