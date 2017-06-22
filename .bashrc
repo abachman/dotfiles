@@ -13,7 +13,7 @@ export HISTCONTROL=ignoreboth
 export HISTFILESIZE=100000000
 export HISTSIZE=100000
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"  # Load RVM into a shell session *as a function*
+export PATH=/usr/local/bin:/usr/local/sbin:$HOME/bin:$PATH
 
 # Projects
 export PROJECTS=$HOME/projects/tixato
@@ -23,9 +23,19 @@ for project in $PROJECTS; do
   fi
 done
 
-export PATH=$PATH:$HOME/projects/better-console/bin:$HOME/projects/johns-toolbox
+export PATH=$HOME/projects/better-console/bin:$HOME/projects/johns-toolbox:$PATH
 export PATH=$HOME/local/bin:$PATH
-export PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+## rbenv instead of RVM
+export RBENV_ROOT="$HOME/.rbenv"
+export PATH="$RBENV_ROOT/bin:$PATH"
+eval "$(rbenv init -)"
+
+## pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
 export EDITOR='mvim -f'
 export GEM_EDITOR='mvim -f'
@@ -43,13 +53,14 @@ if [[ $OSTYPE == darwin* ]]; then
   alias npm-exec='PATH=$(npm bin):$PATH'
   # export NODE_PATH=/Users/adam/node_modules
   export NODE_PATH=/usr/local/lib/node_modules
-  export PATH=/usr/local/bin:/usr/local/sbin:$HOME/bin:$PATH
+
+  # psql from Postgres.app
   export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
 
-  export PATH=$PATH:/usr/local/opt/go/libexec/bin
   export GOPATH=$HOME/go
-  export PATH=$PATH:$GOPATH/bin
-  export PATH=$PATH:/Users/adam/src/go/bin
+  export PATH=/usr/local/opt/go/libexec/bin:$PATH
+  export PATH=$GOPATH/bin:$PATH
+  export PATH=/Users/adam/src/go/bin:$PATH
 
   # Brew fix for mysql
   export PATH=$PATH:$(brew --prefix mysql)/bin
@@ -58,9 +69,9 @@ if [[ $OSTYPE == darwin* ]]; then
   export PATH=$PATH:$(brew --prefix macvim)/bin
 
   # android SDK
-  export PATH=$PATH:$HOME/src/android/sdk/tools
+  # export PATH=$PATH:$HOME/src/android/sdk/tools
 
-  export CDPATH=".:$HOME:$HOME/projects:$HOME/src:$HOME/projects/sketchbook"
+  export CDPATH=".:$HOME:$HOME/projects:$HOME/projects/adafruit"
 
   # ruby bin, so that VIM works properly
   export RUBY_BIN=`which ruby | sed 's/ruby$//'`
@@ -155,9 +166,9 @@ alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
 alias sl='ls'
+alias dc='docker-compose'
 alias irb='irb -r "rubygems"'
 alias sz='du -cksh * | sort -rn | head -11'
-alias con='script/console'
 source ~/.projects
 
 # Navigate to the root directory of the current Ruby on Rails project
@@ -256,8 +267,17 @@ function color_sed() {
   echo -e "$1" | sed "s/\${txtblu}/\[${txtblu}\]/"
 }
 
+# prompt with ruby version
+# rbenv version | sed -e 's/ .*//'
+__rbenv_ps1 ()
+{
+  rbenv_ruby_version=`rbenv version | sed -e 's/ .*//'`
+  printf "ruby $rbenv_ruby_version"
+}
+
 PS1="\[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(__git_ps1 '(%s)')\[${NONE}\]\n$ "
-PS1="\[${txtgrn}\]\$(~/.rvm/bin/rvm-prompt)\[${NONE}\] $PS1"
+PS1="\[${txtgrn}\]\$(__rbenv_ps1)\[${NONE}\] $PS1"
+
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
