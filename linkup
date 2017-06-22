@@ -3,6 +3,9 @@
 mv ~/.vimrc{,.bak}
 ln -s `pwd`/.vimrc $HOME/.vimrc
 
+mv ~/.vimrc-short{,.bak}
+ln -s `pwd`/.vimrc-short $HOME/.vimrc-short
+
 mv ~/.gvimrc{,.bak}
 ln -s `pwd`/.gvimrc $HOME/.gvimrc
 
