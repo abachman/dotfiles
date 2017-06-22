@@ -11,5 +11,6 @@
 --ignore-dir=mockups
 --ignore-dir=public/javascripts/vendor
 --ignore-dir=node_modules
+--ignore-dir=tmp/cache
 --nosql
 
