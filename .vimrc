@@ -82,17 +82,26 @@ let g:markdown_fenced_languages = ['html', 'python', 'javascript', 'ruby', 'bash
 " let g:markdown_syntax_conceal = 0
 
 " Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
 let g:syntastic_enable_signs=0
-let g:syntastic_check_on_open=0
 let g:syntastic_auto_loc_list=1
 let g:syntastic_loc_list_height=4
 let g:syntastic_enable_balloons=0
 
 let g:syntastic_javascript_checkers=['eslint']
+let g:syntastic_javascript_eslint_exe='$(npm bin)/eslint'
 let g:syntastic_coffeescript_checkers=['jshint']
 
 " let g:syntastic_go_checkers = ['golint', 'gotype', 'govet']
-" let g:syntastic_debug = 0
+let g:syntastic_debug=0
 " let g:syntastic_auto_jump=0
 " let g:syntastic_auto_loc_list=1
 " let g:syntastic_disabled_filetypes = ['html', 'xhtml', 'sass', 'scss', 'feature']
@@ -229,8 +238,9 @@ if has("mac")
   " paste current yank buffer
   inoremap <D-V> <esc>""pi
 
-  map <D-s> :w<CR>        " just save
-  imap <D-s> <esc>:w<CR>  " save and return to normal mode (saves a keystroke)
+  map <D-s> :w<CR>          " just save
+  imap <D-s> <esc>:w<CR>    " save and return to normal mode (saves a keystroke)
+  vmap <D-s> <esc>:w<CR>gv  " save and return to previous visual selection
 
   " navigate splits quickly with the normal movement keys
   inoremap <D-h> <esc><C-w><C-h>
@@ -399,39 +409,39 @@ augroup pencil
   autocmd FileType markdown,mkd call pencil#init()
 augroup END
 
-noremap <silent> <Leader>w :call ToggleWrap()<CR>
-function ToggleWrap()
-  if &wrap
-    echo "Wrap OFF"
-    setlocal nowrap
-    set virtualedit=all
-    silent! nunmap <buffer> <Up>
-    silent! nunmap <buffer> <Down>
-    silent! nunmap <buffer> <Home>
-    silent! nunmap <buffer> <End>
-    silent! iunmap <buffer> <Up>
-    silent! iunmap <buffer> <Down>
-    silent! iunmap <buffer> <Home>
-    silent! iunmap <buffer> <End>
-    silent! ounmap <buffer> j
-    silent! ounmap <buffer> k
-  else
-    echo "Wrap ON"
-    setlocal wrap linebreak nolist
-    set virtualedit=
-    setlocal display+=lastline
-    noremap  <buffer> <silent> <Up>   gk
-    noremap  <buffer> <silent> <Down> gj
-    noremap  <buffer> <silent> <Home> g<Home>
-    noremap  <buffer> <silent> <End>  g<End>
-    inoremap <buffer> <silent> <Up>   <C-o>gk
-    inoremap <buffer> <silent> <Down> <C-o>gj
-    inoremap <buffer> <silent> <Home> <C-o>g<Home>
-    inoremap <buffer> <silent> <End>  <C-o>g<End>
-    onoremap <buffer> <silent> j gj
-    onoremap <buffer> <silent> k gk
-  endif
-endfunction
+" noremap <silent> <Leader>w :call ToggleWrap()<CR>
+" function ToggleWrap()
+"   if &wrap
+"     echo "Wrap OFF"
+"     setlocal nowrap
+"     set virtualedit=all
+"     silent! nunmap <buffer> <Up>
+"     silent! nunmap <buffer> <Down>
+"     silent! nunmap <buffer> <Home>
+"     silent! nunmap <buffer> <End>
+"     silent! iunmap <buffer> <Up>
+"     silent! iunmap <buffer> <Down>
+"     silent! iunmap <buffer> <Home>
+"     silent! iunmap <buffer> <End>
+"     silent! ounmap <buffer> j
+"     silent! ounmap <buffer> k
+"   else
+"     echo "Wrap ON"
+"     setlocal wrap linebreak nolist
+"     set virtualedit=
+"     setlocal display+=lastline
+"     noremap  <buffer> <silent> <Up>   gk
+"     noremap  <buffer> <silent> <Down> gj
+"     noremap  <buffer> <silent> <Home> g<Home>
+"     noremap  <buffer> <silent> <End>  g<End>
+"     inoremap <buffer> <silent> <Up>   <C-o>gk
+"     inoremap <buffer> <silent> <Down> <C-o>gj
+"     inoremap <buffer> <silent> <Home> <C-o>g<Home>
+"     inoremap <buffer> <silent> <End>  <C-o>g<End>
+"     onoremap <buffer> <silent> j gj
+"     onoremap <buffer> <silent> k gk
+"   endif
+" endfunction
 
 " function! WrapMode()
 "   setlocal formatoptions=tcq
@@ -569,7 +579,7 @@ function! s:MyGoSettings()
   nnoremap <leader>gs :sp<CR>:GoDef<CR>
 endfunction
 
-function s:MyMarkdownSettings()
+function! s:MyMarkdownSettings()
   setlocal autoindent
   setlocal colorcolumn=0
   setlocal linebreak
