@@ -14,24 +14,15 @@ export HISTFILESIZE=100000000
 export HISTSIZE=100000
 
 export PATH=/usr/local/bin:/usr/local/sbin:$HOME/bin:$PATH
-
-# Projects
-export PROJECTS=$HOME/projects/tixato
-for project in $PROJECTS; do
-  if [ -f $project/.profile ]; then
-    . $project/.profile
-  fi
-done
-
-export PATH=$HOME/projects/better-console/bin:$HOME/projects/johns-toolbox:$PATH
 export PATH=$HOME/local/bin:$PATH
+export PATH=$HOME/projects/better-console/bin:$HOME/projects/johns-toolbox:$PATH
 
 ## rbenv instead of RVM
 export RBENV_ROOT="$HOME/.rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
 eval "$(rbenv init -)"
 
-## pyenv
+## pyenv -- https://github.com/pyenv/pyenv-virtualenv#installing-with-homebrew-for-os-x-users
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
@@ -46,6 +37,12 @@ if [[ $OSTYPE == darwin* ]]; then
   alias pp='pwd | pbcopy'
   alias pc='cd `pbpaste`'
 
+  # iterm tab titles
+  if [ $ITERM_SESSION_ID ]; then
+    # export PROMPT_COMMAND='echo -ne "\033];${PWD##*/}\007"; ':"$PROMPT_COMMAND";
+    export PROMPT_COMMAND='echo -ne "\033]0;${PWD##*/}\007"'
+  fi
+
   if [ -f `brew --prefix`/etc/bash_completion ]; then
     . `brew --prefix`/etc/bash_completion
   fi
@@ -54,45 +51,39 @@ if [[ $OSTYPE == darwin* ]]; then
   # export NODE_PATH=/Users/adam/node_modules
   export NODE_PATH=/usr/local/lib/node_modules
 
-  # psql from Postgres.app
-  export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
   export GOPATH=$HOME/go
   export PATH=/usr/local/opt/go/libexec/bin:$PATH
   export PATH=$GOPATH/bin:$PATH
   export PATH=/Users/adam/src/go/bin:$PATH
 
-  # Brew fix for mysql
-  export PATH=$PATH:$(brew --prefix mysql)/bin
-
   # Brew fix for mvim
   export PATH=$PATH:$(brew --prefix macvim)/bin
-
-  # android SDK
-  # export PATH=$PATH:$HOME/src/android/sdk/tools
 
   export CDPATH=".:$HOME:$HOME/projects:$HOME/projects/adafruit"
 
   # ruby bin, so that VIM works properly
   export RUBY_BIN=`which ruby | sed 's/ruby$//'`
 
-  function pt() {
-    papertrail -f -d 5 $_ | colortail -g papertrail }
-  }
+  # open frameworks
+  export OF_ROOT=/Users/adam/projects/openframeworks_0.10.0
 
   alias ls='ls -G'
   alias dir='ls -G --format=vertical'
   alias rgrep='rgrep --color -n'
   alias grep='grep --color -n'
-  alias git=hub
-  alias b='bundle exec'
 
   # COURSERA!
   export COURSERA_EMAIL=adam.bachman@gmail.com
 
-  export ANDROID_SDK=/Users/adam/src/android/sdk
-  export ANDROID_NDK=/Users/adam/src/android/android-ndk-r9
-  export ANDROID_HOME=/Users/adam/src/android/sdk
+  # android SDK
+  # export PATH=$PATH:$HOME/src/android/sdk/tools
+  # export ANDROID_SDK=/Users/adam/src/android/sdk
+  # export ANDROID_NDK=/Users/adam/src/android/android-ndk-r9
+  # export ANDROID_HOME=/Users/adam/src/android/sdk
 
 else
   # linux
@@ -166,9 +157,13 @@ alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
 alias sl='ls'
-alias dc='docker-compose'
+alias dc='docker-compose -f docker-compose.io.yml'
 alias irb='irb -r "rubygems"'
 alias sz='du -cksh * | sort -rn | head -11'
+alias git=hub
+alias b='bundle exec'
+alias gp='git pull'
+alias gs='git status'
 source ~/.projects
 
 # Navigate to the root directory of the current Ruby on Rails project
@@ -272,13 +267,22 @@ function color_sed() {
 __rbenv_ps1 ()
 {
   rbenv_ruby_version=`rbenv version | sed -e 's/ .*//'`
-  printf "ruby $rbenv_ruby_version"
+  printf "[rb $rbenv_ruby_version]"
+}
+
+# prompt with python / pyenv version
+__pyenv_ps1 ()
+{
+    VENV_NAME="$(pyenv version-name)"
+    VENV_NAME="${VENV_NAME##*/}"
+    printf "[py $VENV_NAME]"
 }
 
 PS1="\[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(__git_ps1 '(%s)')\[${NONE}\]\n$ "
-PS1="\[${txtgrn}\]\$(__rbenv_ps1)\[${NONE}\] $PS1"
-
+PS1="\[${txtgrn}\]\$(__rbenv_ps1)\[${NONE}\] \[${txtcyn}\]\$(__pyenv_ps1)\[${NONE}\] $PS1"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+export PATH="$HOME/.yarn/bin:$PATH"

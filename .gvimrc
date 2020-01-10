@@ -22,13 +22,7 @@ else
   set gfn=Terminus\ 9
 end
 
-"colorscheme railscasts
-"colorscheme vividchalk
-set background=dark
-let g:solarized_contrast="high"
-colorscheme solarized
-" colorscheme desert
-" colorscheme Tomorrow-Night
+colorscheme base16-tomorrow-night
 
 " key unbinding
 if has("mac")
@@ -41,3 +35,5 @@ if has("mac")
   macm File.Save key=<nop>
 endif
 
+" read per-project vimrc files
+set exrc

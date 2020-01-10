@@ -12,13 +12,20 @@ filetype plugin indent on                  " Enable filetype-specific indenting 
 set showmatch "show matching surround
 set hidden    "allow hiding buffers without save
 
+" only for `vim` command, `mvim` uses ~/.gvimrc color settings
 set background=dark
 let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 let g:solarized_contrast="hight"
 colorscheme solarized
-" colorscheme desert
-" colorscheme Tomorrow-Night
+
+" https://github.com/xolox/vim-colorscheme-switcher
+"   :NextColorScheme
+"   :PrevColorScheme
+"   :RandomColorScheme
+let g:colorscheme_switcher_exclude = ['default', 'blue', 'darkblue', 'elflord', 'evening', 'koehler']
+let g:colorscheme_switcher_exclude_builtins = 1
+
 
 " don't leave backup files scattered about.
 set updatecount=0
@@ -72,49 +79,54 @@ let g:go_fmt_command = "goimports"
 
 " javascript js
 let g:javascript_enable_domhtmlcss = 1
-let g:jsx_ext_required = 1
+let g:jsx_ext_required = 0
 
 " markdown / Pencil
 let g:vim_markdown_frontmatter = 1 " jekyll
-let g:pencil#wrapModeDefault = 'soft'   " default is 'hard'
 let g:markdown_fenced_languages = ['html', 'python', 'javascript', 'ruby', 'bash=sh']
 " To disable markdown syntax concealing add the following to your vimrc:
 " let g:markdown_syntax_conceal = 0
 
-" Syntastic
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+" ale replaces Syntastic
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\}
 
-let g:syntastic_enable_signs=0
-let g:syntastic_auto_loc_list=1
-let g:syntastic_loc_list_height=4
-let g:syntastic_enable_balloons=0
+" Only run linters named in ale_linters settings.
+" let g:ale_linters_explicit = 1
 
-let g:syntastic_javascript_checkers=['eslint']
-let g:syntastic_javascript_eslint_exe='$(npm bin)/eslint'
-let g:syntastic_coffeescript_checkers=['jshint']
-
-" let g:syntastic_go_checkers = ['golint', 'gotype', 'govet']
-let g:syntastic_debug=0
-" let g:syntastic_auto_jump=0
-" let g:syntastic_auto_loc_list=1
-" let g:syntastic_disabled_filetypes = ['html', 'xhtml', 'sass', 'scss', 'feature']
-
-let g:syntastic_mode_map = { 'mode': 'active',
-                           \ 'active_filetypes': ['ruby', 'coffee', 'javascript', 'css', 'less'],
-                           \ 'passive_filetypes': ['html', 'xhtml', 'sass', 'scss', 'erlang'] }
-
-let g:syntastic_ruby_mri_quiet_messages = { "level": "warnings",
-                                          \ "type": "style",
-                                          \ "regex": '\mambiguous' }
-
-" let g:syntastic_quiet_messages = { "level": "warnings" }
+" " Syntastic
+" " set statusline+=%0*\ %{g:colors_name}
+" " set statusline+=%#warningmsg#
+" " set statusline+=%{SyntasticStatuslineFlag()}
+" " set statusline+=%*
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_coffeescript_checkers=['jshint']
+" let g:syntastic_enable_balloons=0
+" let g:syntastic_enable_signs=0
+" let g:syntastic_javascript_checkers=['eslint']
+" let g:syntastic_javascript_eslint_exe='$(yarn bin)/eslint'
+" let g:syntastic_loc_list_height=4
+" let g:syntastic_scss_checkers=['scss-lint']
+" " cpp / Ardunio
+" let g:syntastic_cpp_no_include_search = 1
+" let g:syntastic_cpp_remove_include_errors = 1
+" " let g:syntastic_go_checkers = ['golint', 'gotype', 'govet']
+" let g:syntastic_debug=0
+" " let g:syntastic_auto_jump=0
+" " let g:syntastic_disabled_filetypes = ['html', 'xhtml', 'sass', 'scss', 'feature']
+" let g:syntastic_mode_map = { 'mode': 'active',
+"                            \ 'active_filetypes': ['ruby', 'coffee', 'javascript', 'css', 'less'],
+"                            \ 'passive_filetypes': ['html', 'xhtml', 'sass', 'scss', 'erlang'] }
+" let g:syntastic_ruby_mri_quiet_messages = { "level": "warnings",
+"                                           \ "type": "style",
+"                                           \ "regex": '\mambiguous' }
+" let g:syntastic_eruby_ruby_quiet_messages = {'regex': 'possibly useless use of a variable in void context'}
+" " let g:syntastic_quiet_messages = { "level": "warnings" }
 
 
 " Intuitive backspacing in insert mode
@@ -154,6 +166,9 @@ set gdefault
 " keep 3 lines visible at top and bottom
 set scrolloff=3
 
+" read per-project vimrc files
+set exrc
+
 " NerdTree
 let NERDTreeShowBookmarks=0
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
@@ -161,14 +176,7 @@ map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 " BufExplorer
 let g:bufExplorerSortBy='mru'
 
-"" Command-T (supercedes FuzzyFinderTextMate)
-" let g:CommandTMaxHeight=2
-" let g:CommandTScanDotDirectories=0
-" map <leader>t :CommandT<CR>
-" map <C-t> :CommandT<CR>
-" map <leader>f :CommandTFlush<CR>
-
-" ctrlp (supercedes Command-T)
+" ctrlp (supercedes Command-T (supercedes FuzzyFinderTextMate))
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
@@ -178,25 +186,22 @@ map <C-t> :CtrlP<CR>
 
 " fuzzy finders ignoring things
 " set wildmode=list:longest,list:full
-set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,public/system/*,app/mobile/*,vendor/bundle,vendor/bundle/*,node_modules/*,public/assets/*
+set wildignore+=*.log,*.o,*.sassc,*.png,*.jpg,*.db,*.gif,*.jpeg,*.swf,*.class,*.scssc,*.pdf,node_modules/*,public/*,log/*
+
 
 " 'c' - the directory of the current file.
 " 'r' - the nearest ancestor that contains one of these directories or files: .git .hg .svn .bzr _darcs
 " 'a' - like c, but only if the current working directory outside of CtrlP is not a direct ancestor of the directory of the current file.
 " 0 or '' (empty string) - disable this feature.
-let g:ctrlp_working_path_mode = ''
+let g:ctrlp_working_path_mode = 'ra'
 
 " let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)|(node_modules|vendor|app\/mobile|public\/system|Godeps)',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
-  \ }
-
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)|(node_modules/|vendor/|public/|Godeps|tmp/cache)'
 let g:ctrlp_match_window = 'bottom,order:btt,min:1,max:25,results:25'
+let g:ctrlp_root_markers = ['package.json', 'Gemfile', 'Pipfile', 'Rakefile']
 
 " Use a custom file listing command:
-" let g:ctrlp_user_command = 'find %s -type f'        " MacOSX/Linux
+" let g:ctrlp_user_command = 'find %s -type f' " MacOSX/Linux
 
 " Ack search
 let g:ackprg = 'ag --nogroup --nocolor --column -p /Users/adam/.agignore'
@@ -404,11 +409,6 @@ function! ProjectionMode()
   set showcmd
 endfunction
 
-augroup pencil
-  autocmd!
-  autocmd FileType markdown,mkd call pencil#init()
-augroup END
-
 " noremap <silent> <Leader>w :call ToggleWrap()<CR>
 " function ToggleWrap()
 "   if &wrap
@@ -481,6 +481,7 @@ augroup myfiletypes
   autocmd BufRead *.ejs set filetype=jst
   autocmd BufRead *.mustache set filetype=mustache
   autocmd BufRead,BufNewFile *.md set filetype=markdown
+  autocmd BufRead,BufNewFile *.md.erb set filetype=markdown
   autocmd BufRead,BufNewFile *.ru set filetype=ruby
   autocmd BufRead,BufNewFile Gemfile set filetype=ruby
   autocmd BufRead,BufNewFile Rakefile set filetype=ruby
@@ -494,7 +495,6 @@ augroup myfiletypes
   autocmd FileType vim call s:MyVimSettings()
   autocmd FileType python call s:MyPythonSettings()
   autocmd FileType clojure call s:MyClojureSettings()
-  autocmd FileType actionscript,mxml call s:MyFlexSettings()
   autocmd FileType go call s:MyGoSettings()
   autocmd FileType markdown call s:MyMarkdownSettings()
 
@@ -502,11 +502,6 @@ augroup END
 
 augroup myprojectdirs
   autocmd!
-
-  if has("mac")
-    au! BufRead,BufNewFile /Users/adam/projects/store/* set wildignore+=invoicerator/*
-  endif
-
   " autocmd BufNewFile,BufRead /Users/adam/projects/adafruit/io-node/* set background=light
   " au BufWinLeave /Users/adam/projects/adafruit/io-api/*.json mkview
   " au BufWinEnter /Users/adam/projects/adafruit/io-api/*.json silent loadview
@@ -555,10 +550,6 @@ function! s:MyObjcSettings()
   let c_no_curly_error = 1
 endfunction
 
-function! s:MyFlexSettings()
-  set smartindent sw=2 sts=2 et
-endfunction
-
 " json is javascript
 autocmd BufNewFile,BufReadPost,BufEnter *.json set filetype=javascript
 
@@ -588,6 +579,12 @@ function! s:MyMarkdownSettings()
   setlocal spell
   setlocal tabstop=4
   setlocal wrap
+
+  noremap <silent> k gk
+  noremap <silent> j gj
+  noremap <silent> 0 g0
+  noremap <silent> ^ g^
+  noremap <silent> $ g$
 endfunction
 
 " lcd to current rails project root
