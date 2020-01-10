@@ -12,5 +12,6 @@
 --ignore-dir=public/javascripts/vendor
 --ignore-dir=node_modules
 --ignore-dir=tmp/cache
+--ignore-dir=log/
 --nosql
 
