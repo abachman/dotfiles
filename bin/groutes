@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ ! -f Rakefile -o ! -f config/routes.rb ]; then
+  echo "groutes will only work in rails project directories :("
+  exit 1
+fi
+
+if [ ! -f .rails_routes~ ]; then
+  echo "generate routes because cache doesn't exist"
+  bundle exec rake routes > .rails_routes~
+fi
+
+if [ ! -f .rails_routes_rb~ ]; then
+  echo "regenerate routes because config/routes.rb is newer than cache"
+  cp config/routes.rb .rails_routes_rb~
+  bundle exec rake routes > .rails_routes~
+else
+  diff -q config/routes.rb .rails_routes_rb~
+  diff_status=$?
+
+  if [ "$diff_status" -ne 0 ]; then
+    echo "regenerate routes because config/routes.rb doesn't match previous version"
+    cp config/routes.rb .rails_routes_rb~
+    bundle exec rake routes > .rails_routes~
+  fi
+fi
+
+cat .rails_routes~ | grep $@ | sed 's/{.*}//g;s/^[ \t]\{0,6\}//'

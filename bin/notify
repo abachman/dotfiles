@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+SOUNDS = %w[
+ Basso Frog Hero Pop Submarine Blow Funk Morse Purr Tink Bottle Glass Ping Sosumi
+].sort
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: notify [options] message"
+
+  opts.on("-t", "--title [TITLE]", "Set a title for the message") do |title|
+    options[:title] = title
+  end
+
+  opts.on('-s', '--sound [SOUND]', "Choose a sound for notification: #{SOUNDS.join(', ')}") do |sound|
+    options[:sound] = sound
+  end
+
+  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+    options[:verbose] = v
+  end
+end.parse!
+
+def log(options, msg)
+  puts msg if options[:verbose]
+end
+
+title_cmd = %[with title \\"#{options[:title]}\\"] if options[:title]
+sound_cmd = %[sound name \\"#{options[:sound]}\\"] if options[:sound] && SOUNDS.include?(options[:sound])
+message = ARGV.join(' ')
+
+if message.size === 0
+  log(options, "using default message")
+  message = "PING"
+end
+
+command = %["display notification \\"#{message}\\" #{title_cmd} #{sound_cmd}"]
+log(options, "COMMAND #{ command }")
+
+`/usr/bin/osascript -e #{command}`
