@@ -278,8 +278,16 @@ __pyenv_ps1 ()
     printf "[py $VENV_NAME]"
 }
 
+__node_ps1 ()
+{
+  if hash node 2>/dev/null; then
+    local v=$(node -v)
+  fi
+  [ "$v" != "" ] && echo "[js ${v:1}]"
+}
+
 PS1="\[${bldpur}\]\A\[${NONE}\] \w \[${bldylw}\]\$(__git_ps1 '(%s)')\[${NONE}\]\n$ "
-PS1="\[${txtgrn}\]\$(__rbenv_ps1)\[${NONE}\] \[${txtcyn}\]\$(__pyenv_ps1)\[${NONE}\] $PS1"
+PS1="\[${txtgrn}\]\$(__rbenv_ps1)\[${NONE}\] \[${txtcyn}\]\$(__pyenv_ps1)\[${NONE}\] \[${txtylw}\]\$(__node_ps1)\[${NONE}\] $PS1"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
