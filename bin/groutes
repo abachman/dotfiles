@@ -1,5 +1,26 @@
 #!/bin/bash
 
+# groutes greps routes
+#
+# the first time you run routes it runs bin/rails routes and caches it and
+# greps that. if you update config/routes.rb, groutes _knows_ and rebuilds
+# the cache.
+#
+# usage:
+#   $ groutes username
+#                username GET     /:username(.:format)                              dashboards#show
+#          username_feeds GET     /:username/feeds(.:format)                        feeds#index
+#    username_group_feeds GET     /:username/groups/:group/feeds(.:format)          groups#feeds
+#           username_feed GET     /:username/feeds/:id(.:format)                    feeds#show
+#                         GET     /:username/dashboards/:dashboard_id(.:format)     dashboards#show
+#      username_dashboard GET     /:username/:dashboard_id(.:format)                dashboards#show
+#
+# if you ctrl-c, you'll probably have to delete the cache files and start over
+#   $ rm .rails_routes*
+#
+# add the two cache files to .gitignore
+#   $ echo .rails_routes* >> .gitignore
+
 if [ ! -f Rakefile -o ! -f config/routes.rb ]; then
   echo "groutes will only work in rails project directories :("
   exit 1
