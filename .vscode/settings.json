@@ -1,0 +1,149 @@
+{
+  "editor.fontSize": 14,
+  "editor.wordBasedSuggestionsMode": "allDocuments",
+  "workbench.editor.splitOnDragAndDrop": false,
+  "debug.console.fontSize": 14,
+  "editor.tabSize": 2,
+  "telemetry.enableTelemetry": false,
+  "vim.easymotion": false,
+  "vim.sneak": false,
+  "vim.incsearch": true,
+  "vim.useSystemClipboard": true,
+  "vim.useCtrlKeys": true,
+  "vim.vimrc.enable": false,
+  "vim.hlsearch": true,
+  "vim.leader": ",",
+  "vim.handleKeys": {
+    "<C-a>": false,
+    "<C-f>": false
+  },
+  "python.pythonPath": "/Users/adam/.pyenv/shims/python",
+  "python.linting.pylintArgs": [
+    "--disable=missing-docstring,invalid-name,bad-whitespace,duplicate-code,import-error,consider-using-enumerate,no-name-in-module,no-member,too-many-arguments,no-else-return,simplifiable-if-statement,global-statement,anomalous-backslash-in-string,too-many-locals,too-many-statements,no-self-use,protected-access,len-as-condition,too-many-instance-attributes,too-few-public-methods,eval-used,redefined-outer-name,broad-except"
+  ],
+  "files.trimTrailingWhitespace": true,
+  "python.autoComplete.extraPaths": [
+    "/Users/adam/.vscode/extensions/ms-python.devicesimulatorexpress-2019.0.35146/out"
+  ],
+  "workbench.iconTheme": "vscode-icons",
+  "vsicons.dontShowNewVersionMessage": true,
+  "javascript.suggest.enabled": true,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "extensions.ignoreRecommendations": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<space>"],
+      "after": [],
+      "commands": [
+        {
+          "command": ":nohl"
+        }
+      ]
+    }
+  ],
+  "vim.normalModeKeyBindings": [
+    {
+      "before": ["tab"],
+      "commands": ["editor.action.indentLines"]
+    },
+    {
+      "before": ["shift+tab"],
+      "commands": ["editor.action.outdentLines"]
+    }
+  ],
+  "vim.insertModeKeyBindings": [
+    {
+      "before": ["j", "j"],
+      "after": ["<Esc>"]
+    },
+    {
+      "before": ["h", "h"],
+      "after": ["=", ">"]
+    },
+    {
+      "before": ["<C-s>"],
+      "after": ["<C-s>", "<Esc>"]
+    }
+  ],
+  "vim.visualModeKeyBindings": [
+    {
+      "before": ["tab"],
+      "commands": ["editor.action.indentLines"]
+    },
+    {
+      "before": ["shift+tab"],
+      "commands": ["editor.action.outdentLines"]
+    }
+  ],
+  "screencastMode.onlyKeyboardShortcuts": true,
+  "screencastMode.verticalOffset": 10,
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+  "telemetry.enableCrashReporter": false,
+  "files.associations": {
+    "*.html.erb": "erb",
+    "*.mustache": "html",
+    "*.erb": "erb"
+  },
+  "stylelint.packageManager": "yarn",
+  "[json]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.packageManager": "yarn",
+  "explorer.confirmDragAndDrop": false,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "eslint.packageManager": "yarn",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "workbench.startupEditor": "newUntitledFile",
+  "terminal.integrated.shell.osx": "/bin/bash",
+  "python.linting.enabled": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  },
+  "workbench.editor.enablePreview": false,
+  "editor.minimap.enabled": false,
+  "workbench.enableExperiments": false,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "[ruby]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[erb]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[mustache]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "ruby.useBundler": true, //run non-lint commands with bundle exec
+  "ruby.useLanguageServer": true, // use the internal language server (see below)
+  "ruby.lint": {
+    "ruby": false,
+    "rubocop": false
+  },
+  "explorer.confirmDelete": false,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.exclude": {
+    "**/yarn.lock": true
+  },
+  "git.suggestSmartCommit": false // use rubocop for formatting
+}
+
