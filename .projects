@@ -1,29 +1,6 @@
-#!/bin/bash
+#!/bin/zsh
 
 # THIS STUFF IS ONLY USEFUL TO ME, @abachman
-alias laterlist='cd ~/projects/laterlist'
-alias nodewise='cd ~/projects/nodewise'
-alias cortex='cd ~/games/CortexCommand && ./Cortex\ Command.exe'
-
-alias keyserve='cd ~/workspace/keyserve'
-
-alias james='cd ~/projects/james-games/scary-dragon-mining-adventures'
-alias todo='cd ~/Dropbox/documents && mvim todo.txt'
-alias bscape='cd ~/projects/Betascape-2012'
-alias gathergame='cd ~/projects/gather-game'
-
-alias reticulum='cd ~/projects/reticulum && source ~/projects/reticulum/.profile'
-alias derp='cd ~/projects/derpchat'
-alias cartridge='cd ~/projects/cartridge'
-
-alias ardu='cd ~/projects/sketchbook/Arduino'
-
-# WORK WORK WORK WORK WORK
-alias iocgo='cd ~/go/src/github.com/adafruit/io-client-go'
-
-alias aio='cd ~/projects/adafruit/io-docker/io-rails'
-alias ain='cd ~/projects/adafruit/io-docker/io-node'
-alias aui='cd ~/projects/adafruit/io-docker/io-ui'
 
 
 
