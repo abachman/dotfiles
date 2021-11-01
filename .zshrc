@@ -4,8 +4,8 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$PATH:$HOME/.rover/bin
 
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-export PAGER="/bin/cat" # prevent zsh from dropping into less every time you `git branch`
+export ZSH="/Users/adambachman/.oh-my-zsh"
+export PAGER="/bin/cat"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -160,7 +160,7 @@ export CDPATH=".:$HOME:$HOME/projects"
 # rbenv
 eval "$(rbenv init -)"
 
-# nvm
+# nvm 
 export NVM_DIR="$HOME/.nvm"
 [ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
@@ -173,11 +173,13 @@ fi
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# commands
+# commands 
 alias code.="code ."
 alias b="bundle exec"
 alias appetizer="cd $HOME/projects/appetizer; ruby appetizer.rb"
+alias docker="podman"
 
 source $HOME/.projects
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="/usr/local/opt/postgresql@12/bin:$PATH"
