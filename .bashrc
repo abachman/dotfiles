@@ -17,6 +17,11 @@ export PATH=/usr/local/bin:/usr/local/sbin:$HOME/bin:$PATH
 export PATH=$HOME/local/bin:$PATH
 export PATH=$HOME/projects/better-console/bin:$HOME/projects/johns-toolbox:$PATH
 
+# radicle
+export PATH="$HOME/.radicle/bin:$PATH"
+
+# openssl (problems after upgrading macos to 11.2.1)
+
 ## rbenv instead of RVM
 export RBENV_ROOT="$HOME/.rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
@@ -28,8 +33,8 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
-export EDITOR='mvim -f'
-export GEM_EDITOR='mvim -f'
+export EDITOR='vim'
+export GEM_EDITOR='vim'
 
 # system
 if [[ $OSTYPE == darwin* ]]; then
@@ -43,9 +48,9 @@ if [[ $OSTYPE == darwin* ]]; then
     export PROMPT_COMMAND='echo -ne "\033]0;${PWD##*/}\007"'
   fi
 
-  if [ -f `brew --prefix`/etc/bash_completion ]; then
-    . `brew --prefix`/etc/bash_completion
-  fi
+  # if [ -f `brew --prefix`/etc/bash_completion ]; then
+  #   . `brew --prefix`/etc/bash_completion
+  # fi
 
   alias npm-exec='PATH=$(npm bin):$PATH'
   # export NODE_PATH=/Users/adam/node_modules
@@ -61,7 +66,7 @@ if [[ $OSTYPE == darwin* ]]; then
   export PATH=/Users/adam/src/go/bin:$PATH
 
   # Brew fix for mvim
-  export PATH=$PATH:$(brew --prefix macvim)/bin
+  # export PATH=$PATH:$(brew --prefix macvim)/bin
 
   export CDPATH=".:$HOME:$HOME/projects:$HOME/projects/adafruit"
 
@@ -75,6 +80,8 @@ if [[ $OSTYPE == darwin* ]]; then
   alias dir='ls -G --format=vertical'
   alias rgrep='rgrep --color -n'
   alias grep='grep --color -n'
+  alias code.='code .'
+  alias vim='nvim'
 
   # COURSERA!
   export COURSERA_EMAIL=adam.bachman@gmail.com
@@ -157,10 +164,10 @@ alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
 alias sl='ls'
-alias dc='docker-compose -f docker-compose.io.yml'
+alias dc='docker-compose'
 alias irb='irb -r "rubygems"'
 alias sz='du -cksh * | sort -rn | head -11'
-alias git=hub
+# alias git=hub
 alias b='bundle exec'
 alias gp='git pull'
 alias gs='git status'
@@ -294,3 +301,5 @@ export PATH="/usr/local/heroku/bin:$PATH"
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 export PATH="$HOME/.yarn/bin:$PATH"
+source "$HOME/.cargo/env"
+source "/Users/adam/.rover/env"

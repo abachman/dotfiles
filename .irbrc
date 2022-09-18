@@ -4,7 +4,6 @@
 # http://wiki.rubygarden.org/Ruby/page/show/Irb/TipsAndTricks
 
 unless defined? ETC_IRBRC_LOADED
-
   # Require RubyGems by default.
   require 'rubygems'
 
