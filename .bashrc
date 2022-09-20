@@ -33,7 +33,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
-export EDITOR='vim'
+export EDITOR='nvim'
 export GEM_EDITOR='vim'
 
 # system
