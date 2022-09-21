@@ -1,0 +1,49 @@
+[color]
+  branch = auto
+  diff = auto
+  interactive = auto
+  status = auto
+[core]
+  editor = vim
+[alias]
+  st = status
+  stt = status -uno
+  ci = commit
+  br = branch
+  co = checkout
+  df = diff
+  lg = log -p
+  who = shortlog -s --
+  praise = blame
+  lol = log --pretty=oneline --abbrev-commit --graph --decorate
+  puff = push --force-with-lease
+[user]
+  name = Adam Bachman
+  email = adam.bachman@gmail.com
+[push]
+  default = current
+[pull]
+  default = current
+	rebase = true
+[gui]
+  fontui = -family Menlo -size 11 -weight normal -slant roman -underline 0 -overstrike 0
+  fontdiff = -family Menlo -size 11 -weight normal -slant roman -underline 0 -overstrike 0
+[filter "media"]
+  required = true
+  clean = git media clean %f
+  smudge = git media smudge %f
+[filter "hawser"]
+  clean = git hawser clean %f
+  smudge = git hawser smudge %f
+  required = true
+[filter "lfs"]
+  required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+[web]
+  browser = open
+[merge]
+	tool = vimdiff
+[init]
+	defaultBranch = main
