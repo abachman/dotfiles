@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+len = (ARGV[0] || 80).to_i
+line = STDIN.read
+
+if line.size > len
+  puts line
+else
+  puts (" " * ((len - line.size) / 2)) + line
+end

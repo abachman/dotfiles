@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+# ws=open('/usr/share/dict/words').readlines.map(&:strip).select{|w|/^[a-z]{7}$/=~w};100.times{p ws.sample(6).join(' ')}
+
+ws=open('/usr/share/dict/words').readlines.select {|w|
+  /^[a-z]{5,7}\b/ =~ w
+}.map(&:strip)
+
+def n
+  (rand() * 89 + 10).floor.to_s
+end
+
+
+CHARS = '!@#$%^&*(){}[]-_=+;:?/.,<>|'.chars
+def s
+  CHARS.sample
+end
+
+100.times {
+  puts ws.sample(6).map {|w| w + n + s}.join()
+}
