@@ -1,0 +1,13 @@
+#!/bin/bash
+
+KIND=$1
+
+if [ "$KIND" = "js" ] || [ "$KIND" = "" ]; then
+  # js changes
+  FTYPE="(.js$|.ts$|.tsx$)"
+elif [ "$KIND" = "rb" ]; then
+  FTYPE="(.rb$|.erb$|.haml$|Gemfile$|.rake$)"
+fi
+
+# https://gist.github.com/seeliang/0f0de424d1cdc4541c338f4ee93b7e6a
+git diff --name-only --diff-filter=ACMRTUXB origin/staging | grep  -E "$FTYPE"

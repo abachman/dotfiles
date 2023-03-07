@@ -1,0 +1,21 @@
+#!/bin/sh
+
+UNFOLDER=tmp/git-untracked
+
+for dir in $(find $UNFOLDER -type d); do
+  # every file in every dir
+  echo ""
+  echo "$dir"
+  for file in $(find $dir -type f); do
+    echo "  > $file"
+    # note: the regex assumes
+    newf=$(echo $file | sed -e "s|^$UNFOLDER/||")
+    mv $file $newf
+  done
+done
+
+# cleanup
+if [[ -z `find $UNFOLDER -type f` ]]; then
+  echo "removing folders from $UNFOLDER"
+  rm -rf $UNFOLDER/*
+fi

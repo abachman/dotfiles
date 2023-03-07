@@ -1,0 +1,8 @@
+#!/bin/sh
+
+UNFOLDER=tmp/git-untracked
+
+for file in $(git ls-files --others --exclude-standard); do
+  mkdir -p $UNFOLDER/$(dirname $file)
+  mv $file $UNFOLDER/$file
+done
