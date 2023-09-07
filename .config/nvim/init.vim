@@ -11,6 +11,7 @@ call plug#begin()
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-commentary'
   Plug 'neovim/nvim-lspconfig'
+  Plug 'mustache/vim-mustache-handlebars'
 
   " colorschemes
   Plug 'crusoexia/vim-monokai'
@@ -23,9 +24,10 @@ call plug#begin()
   Plug 'reedes/vim-litecorrect'  " Better autocorrections
 
   " post install (yarn install | npm install) then load plugin only for editing supported files
-  Plug 'prettier/vim-prettier', {
-    \ 'do': 'npm ci',
-    \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
+  Plug 'sbdchd/neoformat'
+
+  " GitHub Copilot
+  Plug 'github/copilot.vim'
 
 call plug#end()
 
@@ -115,6 +117,9 @@ let b:unaryTagsStack=""
 let b:closetag_html_style=1
 let b:closetag_disable_synID=1
 source ~/.vim/plugins/closetag.vim
+let b:unaryTagsStack=""
+let b:closetag_html_style=1
+let b:closetag_disable_synID=1
 
 " CTRL-S is Save
 noremap <C-s> :w<CR>
@@ -165,6 +170,10 @@ lua require('nvim-projectconfig').setup()
 
 " let g:rufo_auto_formatting = 1
 " let g:rufo_executeable = 'bundle exec rufo'
+
+" neoformat
+let g:neoformat_try_node_exe = 1" 
+map <leader>f :Neoformat<CR>
 
 " lsp configuration
 " https://github.com/neovim/nvim-lspconfig#Suggested-configuration
@@ -217,6 +226,11 @@ lua <<EOF
       },
     },
   }
+
+  require'lspconfig'.eslint.setup{
+    on_attach = on_attach_all,
+  }
+
   require('lspconfig')['standardrb'].setup{
     on_attach = on_attach_all,
     cmd = { 'bundle', 'exec', 'standardrb', '--lsp' }
