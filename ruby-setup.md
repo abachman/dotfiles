@@ -34,7 +34,7 @@ $ bundle install; docker run my-app bundle install
 
 ## Editor
 
-I'm using VS Code for work with the [Ruby LSP](https://marketplace.visualstudio.com/items?itemName=Shopify.ruby-lsp) plugin installed.
+I'm using VS Code for work with the [Ruby LSP](https://marketplace.visualstudio.com/items?itemName=Shopify.ruby-extensions-pack) plugin installed.
 
 And this is my User-level config:
 ```json
