@@ -4,7 +4,16 @@
   "workbench.editor.splitOnDragAndDrop": false,
   "debug.console.fontSize": 14,
   "editor.tabSize": 2,
-  "telemetry.enableTelemetry": false,
+  "telemetry.telemetryLevel": "crash",
+
+  "files.trimTrailingWhitespace": true,
+  "workbench.iconTheme": "vscode-icons",
+  "vsicons.dontShowNewVersionMessage": true,
+  "javascript.suggest.enabled": true,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "extensions.ignoreRecommendations": true,
+
+  // [ VIM ]
   "vim.easymotion": false,
   "vim.sneak": false,
   "vim.incsearch": true,
@@ -13,23 +22,12 @@
   "vim.vimrc.enable": false,
   "vim.hlsearch": true,
   "vim.leader": ",",
+  "vim.gdefault": true,
+  "vim.joinspaces": false,
   "vim.handleKeys": {
     "<C-a>": false,
     "<C-f>": false
   },
-  "python.pythonPath": "/Users/adam/.pyenv/shims/python",
-  "python.linting.pylintArgs": [
-    "--disable=missing-docstring,invalid-name,bad-whitespace,duplicate-code,import-error,consider-using-enumerate,no-name-in-module,no-member,too-many-arguments,no-else-return,simplifiable-if-statement,global-statement,anomalous-backslash-in-string,too-many-locals,too-many-statements,no-self-use,protected-access,len-as-condition,too-many-instance-attributes,too-few-public-methods,eval-used,redefined-outer-name,broad-except"
-  ],
-  "files.trimTrailingWhitespace": true,
-  "python.autoComplete.extraPaths": [
-    "/Users/adam/.vscode/extensions/ms-python.devicesimulatorexpress-2019.0.35146/out"
-  ],
-  "workbench.iconTheme": "vscode-icons",
-  "vsicons.dontShowNewVersionMessage": true,
-  "javascript.suggest.enabled": true,
-  "editor.acceptSuggestionOnCommitCharacter": false,
-  "extensions.ignoreRecommendations": true,
   "vim.normalModeKeyBindingsNonRecursive": [
     {
       "before": ["<space>"],
@@ -75,67 +73,86 @@
       "commands": ["editor.action.outdentLines"]
     }
   ],
-  "screencastMode.onlyKeyboardShortcuts": true,
+
+  "explorer.confirmDragAndDrop": false,
   "screencastMode.verticalOffset": 10,
   "css.validate": false,
   "scss.validate": false,
   "less.validate": false,
-  "telemetry.enableCrashReporter": false,
   "files.associations": {
     "*.html.erb": "erb",
     "*.mustache": "html",
     "*.erb": "erb"
   },
-  "stylelint.packageManager": "yarn",
   "[json]": {
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "prettier.packageManager": "yarn",
-  "explorer.confirmDragAndDrop": false,
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "eslint.packageManager": "yarn",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "workbench.startupEditor": "newUntitledFile",
-  "terminal.integrated.shell.osx": "/bin/bash",
-  "python.linting.enabled": true,
+  "terminal.integrated.profiles.osx": {
+    "bash": {
+      "path": "bash",
+      "args": ["-l"],
+      "icon": "terminal-bash"
+    },
+    "zsh": {
+      "path": "zsh",
+      "args": ["-l"]
+    },
+    "fish": {
+      "path": "fish",
+      "args": ["-l"]
+    },
+    "tmux": {
+      "path": "tmux",
+      "icon": "terminal-tmux"
+    },
+    "pwsh": {
+      "path": "pwsh",
+      "icon": "terminal-powershell"
+    }
+  },
   "[python]": {
-    "editor.defaultFormatter": "ms-python.python"
+    // "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "workbench.editor.enablePreview": false,
   "editor.minimap.enabled": false,
   "workbench.enableExperiments": false,
   "diffEditor.ignoreTrimWhitespace": false,
-  "[ruby]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  // "[ruby]": {
+  //   "editor.defaultFormatter": "rebornix.ruby"
+  // },
   "[erb]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[mustache]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    // "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "ruby.useBundler": true, //run non-lint commands with bundle exec
-  "ruby.useLanguageServer": true, // use the internal language server (see below)
-  "ruby.lint": {
-    "ruby": false,
-    "rubocop": false
-  },
+  // "ruby.useBundler": true, //run non-lint commands with bundle exec
+  // "ruby.useLanguageServer": true, // use the internal language server (see below)
+  // "ruby.lint": {
+  //   "ruby": false,
+  //   "rubocop": false
+  // },
   "explorer.confirmDelete": false,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "[javascriptreact]": {
@@ -144,6 +161,70 @@
   "files.exclude": {
     "**/yarn.lock": true
   },
-  "git.suggestSmartCommit": false // use rubocop for formatting
-}
+  "git.suggestSmartCommit": false,
+  "security.workspace.trust.untrustedFiles": "newWindow",
+  "csv-to-table.markdownFormat": true,
+  "csv-to-table.openGeneratedTableInNewEditor": false,
+  "git.confirmSync": false,
+  // "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "eslint.format.enable": true,
+  "gitlens.showWhatsNewAfterUpgrades": false,
+  "gitlens.showWelcomeOnInstall": false,
+  "git.enableCommitSigning": true,
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.formatOnSave": true
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "mtxr.sqltools"
+  },
+  "githubPullRequests.pullBranch": "never",
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+  "gitlens.plusFeatures.enabled": false,
+  "lldb.suppressUpdateNotifications": true,
+  "go.toolsManagement.autoUpdate": true,
+  "editor.fontFamily": "'Commit Mono', menlo, monospace",
+  "editor.fontWeight": "450",
+  "terminal.integrated.fontFamily": "\"FiraCode Nerd Font Mono\"",
+  "githubPullRequests.createOnPublishBranch": "never",
+  "editor.wordWrap": "off",
+  "diffEditor.renderSideBySide": false,
+  "application.shellEnvironmentResolutionTimeout": 15,
+  "rubyLsp.enabledFeatures": {
+    "codeActions": true,
+    "diagnostics": true,
+    "documentHighlights": true,
+    "documentLink": true,
+    "documentSymbols": true,
+    "foldingRanges": true,
+    "formatting": true,
+    "hover": true,
+    "inlayHint": true,
+    "onTypeFormatting": true,
+    "selectionRanges": true,
+    "semanticHighlighting": true,
+    "completion": true,
+    "codeLens": true,
+    "definition": true
+  },
+  "rubyLsp.rubyVersionManager": "rbenv",
+  "rubyLsp.formatter": "rubocop",
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp"
+  },
+  "rubyLsp.pullDiagnosticsOn": "save",
+  "ruby.specCommand": "script/test-spanner",
+  "ruby.specSaveFile": true,
 
+  "githubPullRequests.terminalLinksHandler": "github",
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  // when rubocop plugin is installed
+  // "rubocop.commandPath": "${userHome}/.rbenv/shims/rubocop",
+}

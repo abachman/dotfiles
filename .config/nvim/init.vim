@@ -7,14 +7,17 @@ call plug#begin()
   Plug 'jlanzarotta/bufexplorer'
   Plug 'qpkorr/vim-bufkill'
   Plug 'vim-autoformat/vim-autoformat'
-  Plug 'windwp/nvim-projectconfig'
+  if has("linux")
+    Plug 'windwp/nvim-projectconfig'
+  endif
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-commentary'
   Plug 'neovim/nvim-lspconfig'
   Plug 'mustache/vim-mustache-handlebars'
-
+  
   " colorschemes
   Plug 'crusoexia/vim-monokai'
+  Plug 'theacodes/witchhazel'
 
   " writing mode
   Plug 'reedes/vim-pencil'       " Super-powered writing things
@@ -39,6 +42,7 @@ set hidden    "allow hiding buffers without save
 syntax on " Enable syntax highlighting
 set background=dark
 colorscheme monokai
+" colorscheme witchhazel
 hi Normal guibg=black
 
 " don't leave backup files scattered about.
@@ -116,10 +120,10 @@ nmap K <up>
 let b:unaryTagsStack=""
 let b:closetag_html_style=1
 let b:closetag_disable_synID=1
-source ~/.vim/plugins/closetag.vim
-let b:unaryTagsStack=""
-let b:closetag_html_style=1
-let b:closetag_disable_synID=1
+" source ~/.vim/plugins/closetag.vim
+" let b:unaryTagsStack=""
+" let b:closetag_html_style=1
+" let b:closetag_disable_synID=1
 
 " CTRL-S is Save
 noremap <C-s> :w<CR>
@@ -166,7 +170,9 @@ vmap <leader>a "ay:Ag<space><C-r>a<CR>
 map <leader>x :ccl<CR>
 
 " vim-projectconfig
-lua require('nvim-projectconfig').setup()
+if has("linux")
+  lua require('nvim-projectconfig').setup()
+endif
 
 " let g:rufo_auto_formatting = 1
 " let g:rufo_executeable = 'bundle exec rufo'
@@ -274,4 +280,72 @@ let g:pencil#softDetectThreshold = 130
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 
+if exists("g:neovide")
+  " Put anything you want to happen only in Neovide here
+  let g:neovide_cursor_animation_length = 0.01
+endif
+
+if has("mac")
+  set guifont=Menlo:h15
+
+  " create window splits with <Command-w>{s,v}
+  map <D-w>s <C-w>s
+  " in case I fat finger it
+  map <D-w><D-s> <C-w>s
+  map <D-w>q <C-w>q
+  map <D-w><D-q> <C-w>q
+  map <D-w>v <C-w>v
+  map <D-w><D-v> <C-w>v
+  " create window splits with <Command-w>{s,v}
+  imap <D-w>s <esc><C-w>s
+  " in case I fat finger it
+  imap <D-w><D-s> <esc><C-w>s
+  imap <D-w>q <esc><C-w>q
+  imap <D-w><D-q> <esc><C-w>q
+  imap <D-w>v <esc><C-w>v
+  imap <D-w><D-v> <esc><C-w>v
+  imap <D-w> <C-w>
+
+  imap <D-p> <C-p>
+  imap <D-n> <C-n>
+
+  " map <D-t> :CommandT<CR>
+  " noremap <D-t> :CommandT<CR>
+  " inoremap <D-t> :CommandT<CR>
+  map <D-t> :CtrlP<CR>
+  noremap <D-t> :CtrlP<CR>
+  inoremap <D-t> :CtrlP<CR>
+
+
+  " paste current yank buffer
+  inoremap <D-V> <esc>""pi
+
+  map <D-s> :w<CR>          " just save
+  imap <D-s> <esc>:w<CR>    " save and return to normal mode (saves a keystroke)
+  vmap <D-s> <esc>:w<CR>gv  " save and return to previous visual selection
+
+  " navigate splits quickly with the normal movement keys
+  inoremap <D-h> <esc><C-w><C-h>
+  inoremap <D-j> <esc><C-w><C-j>
+  inoremap <D-k> <esc><C-w><C-k>
+  inoremap <D-l> <esc><C-w><C-l>
+  noremap <D-h> <C-w><C-h>
+  noremap <D-j> <C-w><C-j>
+  noremap <D-k> <C-w><C-k>
+  noremap <D-l> <C-w><C-l>
+
+  " esc
+  inoremap <D-[> <esc>
+
+  " format paragraph
+  map <D-p> vipgq
+
+  map <leader>w= <C-w>=
+  noremap <leader>w= <C-w>=
+  noremap <D-w>= <C-w>=
+
+  " https://github.com/mattn/emmet-vim formerly Zen-Coding
+  map <D-y> <C-y>
+  map <D-y>, <C-y>,
+endif
 
