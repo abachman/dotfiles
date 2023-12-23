@@ -12,6 +12,7 @@ call plug#begin()
   endif
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-commentary'
+  Plug 'tpope/vim-surround'
   Plug 'neovim/nvim-lspconfig'
   Plug 'mustache/vim-mustache-handlebars'
   
@@ -155,6 +156,7 @@ set modelines=10
 
 " NerdTree
 let NERDTreeShowBookmarks=0
+let g:NERDTreeIgnore = ['^node_modules$']
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
 
 " fzf.vim, ctrl-p to launch
@@ -178,7 +180,7 @@ endif
 " let g:rufo_executeable = 'bundle exec rufo'
 
 " neoformat
-let g:neoformat_try_node_exe = 1" 
+let g:neoformat_try_node_exe = 1
 map <leader>f :Neoformat<CR>
 
 " lsp configuration
@@ -221,19 +223,27 @@ lua <<EOF
     -- This is the default in Nvim 0.7+
     debounce_text_changes = 150,
   }
-  require('lspconfig')['tsserver'].setup{
-    on_attach = function(client, bufnr)
-      on_attach_all(client, bufnr)
-    end,
-    flags = lsp_flags,
-    init_options = {
-      preferences = {
-        disableSuggestions = true,
-      },
+  -- require('lspconfig')['tsserver'].setup{
+  --   on_attach = function(client, bufnr)
+  --     on_attach_all(client, bufnr)
+  --   end,
+  --   flags = lsp_flags,
+  --   init_options = {
+  --     preferences = {
+  --       disableSuggestions = true,
+  --     },
+  --   },
+  -- }
+
+  require'lspconfig'.eslint.setup{
+    on_attach = on_attach_all,
+    settings = {
+      packageManager = 'npm',
+      run = 'onSave',
     },
   }
 
-  require'lspconfig'.eslint.setup{
+  require'lspconfig'.denols.setup{
     on_attach = on_attach_all,
   }
 
