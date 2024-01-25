@@ -1,7 +1,6 @@
 call plug#begin()
 
   Plug 'preservim/nerdtree'
-  " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
   Plug 'jlanzarotta/bufexplorer'
@@ -15,10 +14,14 @@ call plug#begin()
   Plug 'tpope/vim-surround'
   Plug 'neovim/nvim-lspconfig'
   Plug 'mustache/vim-mustache-handlebars'
+  Plug 'godlygeek/tabular'
   
   " colorschemes
   Plug 'crusoexia/vim-monokai'
   Plug 'theacodes/witchhazel'
+  Plug 'vim-scripts/wombat256.vim'
+  Plug 'abachman/vim-desert-black'
+  Plug 'toupeira/vim-desertink'
 
   " writing mode
   Plug 'reedes/vim-pencil'       " Super-powered writing things
@@ -26,6 +29,8 @@ call plug#begin()
   Plug 'junegunn/goyo.vim'       " Full screen writing mode
   Plug 'reedes/vim-lexical'      " Better spellcheck mappings
   Plug 'reedes/vim-litecorrect'  " Better autocorrections
+  Plug 'folke/zen-mode.nvim'
+  Plug 'folke/twilight.nvim'
 
   " post install (yarn install | npm install) then load plugin only for editing supported files
   Plug 'sbdchd/neoformat'
@@ -41,10 +46,14 @@ set showmatch "show matching surround
 set hidden    "allow hiding buffers without save
 
 syntax on " Enable syntax highlighting
-set background=dark
-colorscheme monokai
+
+colorscheme desertink
 " colorscheme witchhazel
-hi Normal guibg=black
+" colorscheme wombat256mod
+set background=dark
+hi Normal guibg=#000000 ctermbg=16
+hi NonText guibg=#121212 ctermbg=232
+hi LineNr guibg=#000000 ctermbg=16
 
 " don't leave backup files scattered about.
 set updatecount=0
@@ -105,12 +114,14 @@ vnoremap <S-Tab> <gv
 
 " window nav
 inoremap <C-h> <esc><C-w><C-h>
-inoremap <C-j> <esc><C-w><C-j>
-inoremap <C-k> <esc><C-w><C-k>
+inoremap <C-j> <esc><C-w>j
+inoremap <C-k> <esc><C-w>k
+imap <C-k> <esc><C-w><C-k>
 inoremap <C-l> <esc><C-w><C-l>
 noremap <C-h> <C-w><C-h>
-noremap <C-j> <C-w><C-j>
-noremap <C-k> <C-w><C-k>
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+nmap <C-k> <esc><C-w>k
 noremap <C-l> <C-w><C-l>
 
 " unmap shift-k
@@ -158,9 +169,10 @@ set modelines=10
 let NERDTreeShowBookmarks=0
 let g:NERDTreeIgnore = ['^node_modules$']
 map <leader>d :execute 'NERDTreeToggle ' . getcwd()<CR>
+map <leader>D :NERDTreeFind<CR>
 
 " fzf.vim, ctrl-p to launch
-let $FZF_DEFAULT_COMMAND='ag -l --path-to-ignore ~/.ignore --nocolor --hidden -g ""'
+" let $FZF_DEFAULT_COMMAND='ag -l --path-to-ignore ~/.ignore --nocolor --hidden -g ""'
 map <leader>p :Files<CR>
 map <C-p> :Files<CR>
 
@@ -181,7 +193,27 @@ endif
 
 " neoformat
 let g:neoformat_try_node_exe = 1
+" let g:neoformat_verbose = 1 " for debugging
 map <leader>f :Neoformat<CR>
+
+let g:neoformat_javascript_biome = {
+  \ 'exe': 'biome',
+  \ 'try_node_exe': 1,
+  \ 'args': ['format', '--stdin-file-path="%:p"'],
+  \ 'no_append': 1,
+  \ 'stdin': 1,
+  \ }
+
+let g:neoformat_json_biome = {
+  \ 'exe': 'biome',
+  \ 'try_node_exe': 1,
+  \ 'args': ['format', '--stdin-file-path="%:p"'],
+  \ 'no_append': 1,
+  \ 'stdin': 1,
+  \ }
+
+let g:neoformat_enabled_javascript = ['biome', 'denofmt']
+let g:neoformat_enabled_json = ['biome', 'denofmt']
 
 " lsp configuration
 " https://github.com/neovim/nvim-lspconfig#Suggested-configuration
@@ -208,7 +240,7 @@ lua <<EOF
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+    -- vim.keymap.set('n', '<C-K>', vim.lsp.buf.signature_help, bufopts)
     vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
     vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
     vim.keymap.set('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, bufopts)
@@ -224,8 +256,7 @@ lua <<EOF
     debounce_text_changes = 150,
   }
   -- require('lspconfig')['tsserver'].setup{
-  --   on_attach = function(client, bufnr)
-  --     on_attach_all(client, bufnr)
+  --   on_attach = function(client, bufnr) --     on_attach_all(client, bufnr)
   --   end,
   --   flags = lsp_flags,
   --   init_options = {
@@ -235,7 +266,9 @@ lua <<EOF
   --   },
   -- }
 
-  require'lspconfig'.eslint.setup{
+  local lspconfig = require('lspconfig')
+
+  lspconfig.eslint.setup{
     on_attach = on_attach_all,
     settings = {
       packageManager = 'npm',
@@ -243,14 +276,21 @@ lua <<EOF
     },
   }
 
-  require'lspconfig'.denols.setup{
+  lspconfig.biome.setup{
     on_attach = on_attach_all,
+    cmd = { 'npm', 'run', 'biome', 'lsp-proxy' },
   }
 
-  require('lspconfig')['standardrb'].setup{
+  lspconfig.denols.setup{
+    on_attach = on_attach_all,
+    root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
+  }
+
+  lspconfig.standardrb.setup{
     on_attach = on_attach_all,
     cmd = { 'bundle', 'exec', 'standardrb', '--lsp' }
   }
+
   -- require('lspconfig')['pyright'].setup{
   --   on_attach = on_attach,
   --   flags = lsp_flags,
@@ -289,6 +329,33 @@ let g:pencil#softDetectThreshold = 130
 " Python
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+
+" zen-mode.nvim
+"
+" better to call lua require(...)
+lua << EOF
+  require("zen-mode").setup({
+    window = {
+      backdrop = 0.95,
+      width = 100, 
+      height = 1, 
+      options = {
+        list = true
+      },
+    },
+    plugins = {
+      options = {
+        enabled = true,
+      },
+
+      twilight = { enabled = true },
+      alacritty = {
+        enabled = true,
+        font = "14", -- font size
+      },
+    },
+  })
+EOF
 
 if exists("g:neovide")
   " Put anything you want to happen only in Neovide here
