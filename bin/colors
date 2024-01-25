@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in {30..38}; do
+  echo -e "\033[${i}m${i}m\033[0m"
+  echo -e "\033[${i};1m${i};1m\033[0m"
+done
