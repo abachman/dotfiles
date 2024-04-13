@@ -1,27 +1,35 @@
+set nocompatible
+filetype plugin indent on
+syntax enable
+
 call plug#begin()
+  Plug 'nvim-treesitter/nvim-treesitter'
+  Plug 'neovim/nvim-lspconfig'
+  Plug 'abachman/neoformat', { 'branch': 'add-biome-format' }
+  Plug 'github/copilot.vim'
 
   Plug 'preservim/nerdtree'
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
   Plug 'jlanzarotta/bufexplorer'
   Plug 'qpkorr/vim-bufkill'
-  Plug 'vim-autoformat/vim-autoformat'
   if has("linux")
     Plug 'windwp/nvim-projectconfig'
   endif
   Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-commentary'
   Plug 'tpope/vim-surround'
-  Plug 'neovim/nvim-lspconfig'
   Plug 'mustache/vim-mustache-handlebars'
   Plug 'godlygeek/tabular'
-  
+
   " colorschemes
   Plug 'crusoexia/vim-monokai'
-  Plug 'theacodes/witchhazel'
   Plug 'vim-scripts/wombat256.vim'
   Plug 'abachman/vim-desert-black'
   Plug 'toupeira/vim-desertink'
+  Plug 'folke/tokyonight.nvim'
+  Plug 'rose-pine/neovim'
+  Plug 'rebelot/kanagawa.nvim'
 
   " writing mode
   Plug 'reedes/vim-pencil'       " Super-powered writing things
@@ -31,29 +39,12 @@ call plug#begin()
   Plug 'reedes/vim-litecorrect'  " Better autocorrections
   Plug 'folke/zen-mode.nvim'
   Plug 'folke/twilight.nvim'
-
-  " post install (yarn install | npm install) then load plugin only for editing supported files
-  Plug 'sbdchd/neoformat'
-
-  " GitHub Copilot
-  Plug 'github/copilot.vim'
-
 call plug#end()
-
-filetype plugin indent on                  " Enable filetype-specific indenting and plugins
 
 set showmatch "show matching surround
 set hidden    "allow hiding buffers without save
 
-syntax on " Enable syntax highlighting
-
-colorscheme desertink
-" colorscheme witchhazel
-" colorscheme wombat256mod
-set background=dark
-hi Normal guibg=#000000 ctermbg=16
-hi NonText guibg=#121212 ctermbg=232
-hi LineNr guibg=#000000 ctermbg=16
+lua require('colorscheme')
 
 " don't leave backup files scattered about.
 set updatecount=0
@@ -188,123 +179,23 @@ if has("linux")
   lua require('nvim-projectconfig').setup()
 endif
 
-" let g:rufo_auto_formatting = 1
-" let g:rufo_executeable = 'bundle exec rufo'
-
 " neoformat
 let g:neoformat_try_node_exe = 1
 " let g:neoformat_verbose = 1 " for debugging
 map <leader>f :Neoformat<CR>
 
-let g:neoformat_javascript_biome = {
-  \ 'exe': 'biome',
-  \ 'try_node_exe': 1,
-  \ 'args': ['format', '--stdin-file-path="%:p"'],
-  \ 'no_append': 1,
-  \ 'stdin': 1,
-  \ }
-
-let g:neoformat_json_biome = {
-  \ 'exe': 'biome',
-  \ 'try_node_exe': 1,
-  \ 'args': ['format', '--stdin-file-path="%:p"'],
-  \ 'no_append': 1,
-  \ 'stdin': 1,
-  \ }
-
 let g:neoformat_enabled_javascript = ['biome', 'denofmt']
+let g:neoformat_enabled_javascriptreact = ['biome', 'denofmt']
+let g:neoformat_enabled_typescript = ['biome', 'denofmt']
+let g:neoformat_enabled_typescriptreact = ['biome', 'denofmt']
 let g:neoformat_enabled_json = ['biome', 'denofmt']
+let g:neoformat_enabled_jsonc = ['biome', 'denofmt']
+let g:neoformat_enabled_ruby = ['standard']
 
 " lsp configuration
 " https://github.com/neovim/nvim-lspconfig#Suggested-configuration
-lua <<EOF
-  -- Mappings.
-  -- See `:help vim.diagnostic.*` for documentation on any of the below functions
-  local opts = { noremap=true, silent=true }
-
-  vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-  vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-  vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-  vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
-
-  -- Use an on_attach function to only map the following keys
-  -- after the language server attaches to the current buffer
-  local on_attach_all = function(client, bufnr)
-    -- Enable completion triggered by <c-x><c-o>
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-    -- Mappings.
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
-    local bufopts = { noremap=true, silent=true, buffer=bufnr }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-    -- vim.keymap.set('n', '<C-K>', vim.lsp.buf.signature_help, bufopts)
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-    vim.keymap.set('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, bufopts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-    vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-    vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
-  end
-
-  local lsp_flags = {
-    -- This is the default in Nvim 0.7+
-    debounce_text_changes = 150,
-  }
-  -- require('lspconfig')['tsserver'].setup{
-  --   on_attach = function(client, bufnr) --     on_attach_all(client, bufnr)
-  --   end,
-  --   flags = lsp_flags,
-  --   init_options = {
-  --     preferences = {
-  --       disableSuggestions = true,
-  --     },
-  --   },
-  -- }
-
-  local lspconfig = require('lspconfig')
-
-  lspconfig.eslint.setup{
-    on_attach = on_attach_all,
-    settings = {
-      packageManager = 'npm',
-      run = 'onSave',
-    },
-  }
-
-  lspconfig.biome.setup{
-    on_attach = on_attach_all,
-    cmd = { 'npm', 'run', 'biome', 'lsp-proxy' },
-  }
-
-  lspconfig.denols.setup{
-    on_attach = on_attach_all,
-    root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
-  }
-
-  lspconfig.standardrb.setup{
-    on_attach = on_attach_all,
-    cmd = { 'bundle', 'exec', 'standardrb', '--lsp' }
-  }
-
-  -- require('lspconfig')['pyright'].setup{
-  --   on_attach = on_attach,
-  --   flags = lsp_flags,
-  -- }
-  -- require('lspconfig')['rust_analyzer'].setup{
-  --   on_attach = on_attach,
-  --   flags = lsp_flags,
-  --   -- Server-specific settings...
-  --   settings = {
-  --     ["rust-analyzer"] = {}
-  --   }
-  -- }
-EOF
-
+lua require('init-lsp')
+ 
 " pencil
 augroup pencil
  autocmd!
@@ -315,7 +206,7 @@ augroup pencil
      \ | setl fdo+=search
 augroup END
 
-" Pencil / Writing Controls {{{
+" Pencil / Writing Controls
 let g:pencil#wrapModeDefault = 'soft'
 let g:pencil#textwidth = 74
 let g:pencil#joinspaces = 0
@@ -324,8 +215,7 @@ let g:pencil#conceallevel = 3
 let g:pencil#concealcursor = 'c'
 let g:pencil#softDetectSample = 20
 let g:pencil#softDetectThreshold = 130
-" }}}
-
+ 
 " Python
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
@@ -425,4 +315,7 @@ if has("mac")
   map <D-y> <C-y>
   map <D-y>, <C-y>,
 endif
+
+" At the bottom of your init.vim, keep all configs on one line
+lua require'nvim-treesitter.configs'.setup{highlight={enable=true}}
 
