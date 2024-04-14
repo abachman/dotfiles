@@ -73,8 +73,6 @@ alias rgrep='rgrep --color -n'
 alias grep='grep --color -n'
 alias dc='docker-compose'
 
-source $HOME/.projects
-
 # Added by OrbStack: command-line tools and integration
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
