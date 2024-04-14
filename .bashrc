@@ -205,10 +205,6 @@ timestamp() {
   date +%Y%m%d%H%M%S
 }
 
-## Rake with RAILS_ENV=test
-alias raket="rake RAILS_ENV=test"
-alias rakec="rake RAILS_ENV=cucumber"
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).

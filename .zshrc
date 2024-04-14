@@ -1,25 +1,32 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/projects/dotfiles/bin:$PATH
 
-export PAGER="/bin/cat"
-
-source "$HOME/.github"
-export HOMEBREW_NO_ANALYTICS=1
-
-## shell features i don't want running in Warp
 if [[ $TERM_PROGRAM != "WarpTerminal" ]]; then
-  # zsh plugins and prompt styling with spaceship
-  source "/opt/homebrew/opt/spaceship/spaceship.zsh"
-  export SPACESHIP_CONFIG_FILE="$HOME/.config/spaceship.zsh"
+  # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+  # Initialization code that may require console input (password prompts, [y/n]
+  # confirmations, etc.) must go above this block; everything else may go below.
+  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+  fi
+
+  # https://getantidote.github.io/
+  export ZDOTDIR=$HOME/.config/zsh
+  source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
+  antidote load
+
+  autoload -Uz promptinit && promptinit && prompt powerlevel10k
+
+  # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
+  [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
   # iterm2 config
   test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
   # fzf
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+  eval "$(fzf --zsh)"
 else
   eval "$(starship init zsh)"
   alias warp-test='echo "warp config active"'
-  # source <(/opt/homebrew/bin/starship init zsh --print-full-init)
 fi
 
 # Preferred editor
@@ -32,45 +39,30 @@ export EDITOR=nvim
 # export ARCHFLAGS="-arch x86_64"
 
 # don't need to navigate to ~/ to cd into Downloads, etc.
-export CDPATH=".:$HOME:$HOME/workspace:$HOME/src"
+export CDPATH=".:$HOME:$HOME/projects:$HOME/src"
 
 # ruby env, rbenv
-eval "$(rbenv init -)"
+command -v rbenv >/dev/null || eval "$(rbenv init -)"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-# place this after nvm initialization!
-# https://github.com/nvm-sh/nvm#zsh
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
-      nvm use
-    fi
-  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
-  fi
-}
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"                                       # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
 # Set up NPM_TOKEN if .npmrc exists
 if [ -f ~/.npmrc ]; then
-  export NPM_TOKEN=`sed -n -e '/_authToken/ s/.*\= *//p' ~/.npmrc`
+  export NPM_TOKEN=$(sed -n -e '/_authToken/ s/.*\= *//p' ~/.npmrc)
 fi
+
+# might be tokens, might not
+source "$HOME/.github"
+
+# don't use less by default
+export PAGER="/bin/cat"
 
 # homebrew config
 export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_ENV_HINTS=1
 
 # commands
 alias code.="code ."
@@ -83,22 +75,10 @@ alias dc='docker-compose'
 
 source $HOME/.projects
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-export PATH="/usr/local/opt/postgresql@12/bin:$PATH"
-export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
+# Added by OrbStack: command-line tools and integration
+source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
 # python setup
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-# Google Cloud (gcloud) PATH and shell completion
-export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-export CLOUDSDK_PYTHON=$PYENV_ROOT/shims/python
-export GCLOUD_SDK="$HOME/bin/google-cloud-sdk"
-if [ -f "$GCLOUD_SDK/google-cloud-sdk/path.zsh.inc" ]; then source "$GCLOUD_SDK/google-cloud-sdk/path.zsh.inc"; fi
-if [ -f "$GCLOUD_SDK/google-cloud-sdk/completion.zsh.inc" ]; then source "$GCLOUD_SDK/google-cloud-sdk/completion.zsh.inc"; fi
-
-export PATH="$GCLOUD_SDK/bin:$PATH"
-
-source /Users/abachman/.docker/init-zsh.sh || true # Added by Docker Desktop
+command -v pyenv >/dev/null || eval "$(pyenv init -)"
