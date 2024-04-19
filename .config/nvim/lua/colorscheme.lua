@@ -81,3 +81,23 @@ vim.cmd("hi NonText guibg=#121212 ctermbg=232")
 vim.cmd("hi LineNr guibg=#000000 ctermbg=16")
 vim.cmd("hi BufferInactive guibg=#242424 ctermbg=00")
 
+
+-- =======
+-- syntax on " Enable syntax highlighting
+-- set background=dark
+
+-- function! MyHighlights() abort
+--     highlight Normal     cterm=NONE ctermbg=16 guibg=#000000
+--     highlight NonText    cterm=NONE ctermbg=16 guibg=#000000
+-- endfunction
+
+-- augroup MyColors
+--     autocmd!
+--     autocmd ColorScheme * call MyHighlights()
+-- augroup END
+
+
+-- colorscheme dracula
+-- " colorscheme witchhazel
+-- hi Normal guibg=black
+-- >>>>>>> 43f66f6 (work changes)

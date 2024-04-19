@@ -30,6 +30,8 @@ call plug#begin()
   Plug 'folke/tokyonight.nvim'
   Plug 'rose-pine/neovim'
   Plug 'rebelot/kanagawa.nvim'
+  Plug 'theacodes/witchhazel'
+  Plug 'dracula/vim', { 'as': 'dracula' }
 
   " writing mode
   Plug 'reedes/vim-pencil'       " Super-powered writing things
@@ -195,7 +197,7 @@ let g:neoformat_enabled_ruby = ['standard']
 " lsp configuration
 " https://github.com/neovim/nvim-lspconfig#Suggested-configuration
 lua require('init-lsp')
- 
+
 " pencil
 augroup pencil
  autocmd!
@@ -215,7 +217,7 @@ let g:pencil#conceallevel = 3
 let g:pencil#concealcursor = 'c'
 let g:pencil#softDetectSample = 20
 let g:pencil#softDetectThreshold = 130
- 
+
 " Python
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
@@ -227,8 +229,8 @@ lua << EOF
   require("zen-mode").setup({
     window = {
       backdrop = 0.95,
-      width = 100, 
-      height = 1, 
+      width = 100,
+      height = 1,
       options = {
         list = true
       },
@@ -250,6 +252,11 @@ EOF
 if exists("g:neovide")
   " Put anything you want to happen only in Neovide here
   let g:neovide_cursor_animation_length = 0.01
+
+  " paste current system clipboard
+  noremap <D-v> "+pi
+  inoremap <D-v> <esc>"+pi
+  vmap <D-c> "+y
 endif
 
 if has("mac")
@@ -276,13 +283,9 @@ if has("mac")
   imap <D-p> <C-p>
   imap <D-n> <C-n>
 
-  " map <D-t> :CommandT<CR>
-  " noremap <D-t> :CommandT<CR>
-  " inoremap <D-t> :CommandT<CR>
-  map <D-t> :CtrlP<CR>
-  noremap <D-t> :CtrlP<CR>
-  inoremap <D-t> :CtrlP<CR>
-
+  " map <D-t> :CommandT<CR> noremap <D-t> :CommandT<CR> inoremap <D-t>
+  " :CommandT<CR>
+  map <D-t> :CtrlP<CR> noremap <D-t> :CtrlP<CR> inoremap <D-t> :CtrlP<CR>
 
   " paste current yank buffer
   inoremap <D-V> <esc>""pi
