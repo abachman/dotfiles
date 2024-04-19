@@ -1,5 +1,6 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH=$HOME/projects/dotfiles/bin:$PATH
+export ZDOTDIR=$HOME/.config/zsh
 
 if [[ $TERM_PROGRAM != "WarpTerminal" ]]; then
   # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
@@ -10,7 +11,6 @@ if [[ $TERM_PROGRAM != "WarpTerminal" ]]; then
   fi
 
   # https://getantidote.github.io/
-  export ZDOTDIR=$HOME/.config/zsh
   source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
   antidote load
 
@@ -35,19 +35,17 @@ alias vim='nvim'
 alias vimdiff='nvim -d'
 export EDITOR=nvim
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
 # don't need to navigate to ~/ to cd into Downloads, etc.
 export CDPATH=".:$HOME:$HOME/projects:$HOME/src"
 
 # ruby env, rbenv
-command -v rbenv >/dev/null || eval "$(rbenv init -)"
+eval "$(rbenv init -)"
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"                                       # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
+source $ZDOTDIR/nvm.zsh
 
 # Set up NPM_TOKEN if .npmrc exists
 if [ -f ~/.npmrc ]; then
@@ -80,3 +78,4 @@ source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 command -v pyenv >/dev/null || eval "$(pyenv init -)"
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
