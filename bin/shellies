@@ -1,0 +1,12 @@
+#!/bin/sh
+
+configs=(
+  $HOME/.config/zsh/nvm.zsh
+  $HOME/.config/zsh/alias.zsh
+  $HOME/.config/zsh/local.zsh
+)
+
+# loop through each element in the configs array
+for path in ${configs[@]}; do
+  echo $path
+done
