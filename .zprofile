@@ -1,8 +1,8 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Added by OrbStack: command-line tools and integration
-source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+if [ -n "$ZSH_VERSION" -a -n "$PS1" ]; then
+  if [ -f "$HOME/.config/zsh/.zshrc" ]; then
+    . "$HOME/.config/zsh/.zshrc"
+  fi
+fi
 
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
