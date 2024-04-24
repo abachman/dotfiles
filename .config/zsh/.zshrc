@@ -6,6 +6,8 @@ export ZDOTDIR=$HOME/.config/zsh
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+# brew install p10k antidote zsh-syntax-highlighting zsh-autosuggestions
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -21,16 +23,16 @@ autoload -Uz promptinit && promptinit && prompt powerlevel10k
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
-# iterm2 config
+# iterm2 config: brew install iterm2
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# fzf
+# fzf: brew install fzf
 eval "$(fzf --zsh)"
 
-# ruby env, rbenv
+# ruby env, rbenv: brew install rbenv ruby-build
 eval "$(rbenv init - zsh)"
 
-# python setup
+# python setup: brew install pyenv pyenv-virtualenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
@@ -65,6 +67,9 @@ export HOMEBREW_NO_ENV_HINTS=1
 
 # Added by OrbStack: command-line tools and integration
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+
+# brew install zsh-syntax-highlighting
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ## uncomment to enable zsh profiling (see top of file)
 # zprof
