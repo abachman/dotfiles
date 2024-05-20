@@ -6,4 +6,4 @@
 .config/zsh/.zsh_sessions
 .config/zsh/local.zsh
 .config/zsh/.zsh_plugins.zsh
-.config/zsh/.zsh_history
+.config/zsh/recurly.zsh
