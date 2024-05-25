@@ -1,7 +1,12 @@
+## uncomment to enable zsh profiling (see bottom of file)
+# zmodload zsh/zprof
+
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$HOME/projects/dotfiles/bin:$PATH
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export ZDOTDIR=$HOME/.config/zsh
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# brew install p10k antidote zsh-syntax-highlighting zsh-autosuggestions
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -19,40 +24,38 @@ autoload -Uz promptinit && promptinit && prompt powerlevel10k
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
-# iterm2 config
+# iterm2 config: brew install iterm2
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-# fzf
+# fzf: brew install fzf
 eval "$(fzf --zsh)"
 
+# ruby env, rbenv: brew install rbenv ruby-build
+eval "$(rbenv init - zsh)"
+
+# # python setup: brew install pyenv pyenv-virtualenv
+# export PYENV_ROOT="$HOME/.pyenv"
+# [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
+
+config_files=(
+  "$HOME/.config/zsh/alias.zsh"
+  "$HOME/.config/zsh/local.zsh"
+  "$HOME/.github"
+)
+
+for config in ${config_files[@]}; do
+  if [ -f "$config" ]; then
+    . $config
+  fi
+done
+
 # Preferred editor
-alias vi='nvim'
-alias vim='nvim'
-alias vimdiff='nvim -d'
 export EDITOR=nvim
 
-# don't need to navigate to ~/ to cd into Downloads, etc.
-export CDPATH=".:$HOME:$HOME/projects:$HOME/src"
-
-# ruby env, rbenv
-eval "$(rbenv init -)"
-
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"                                       # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
-source $ZDOTDIR/nvm.zsh
-
-# local
-source $ZDOTDIR/local.zsh
-
-# Set up NPM_TOKEN if .npmrc exists
-if [ -f ~/.npmrc ]; then
-  export NPM_TOKEN=$(sed -n -e '/_authToken/ s/.*\= *//p' ~/.npmrc)
-fi
-
-# might be tokens, might not
-source "$HOME/.github"
+# but we force zsh to run in emacs keybinding mode
+bindkey -e
 
 # don't use less by default
 export PAGER="/bin/cat"
@@ -61,24 +64,11 @@ export PAGER="/bin/cat"
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_ENV_HINTS=1
 
-# commands
-alias code.="code ."
-alias b="bundle exec"
-alias ls='ls -G'
-alias dir='ls -G --format=vertical'
-alias rgrep='rgrep --color -n'
-alias grep='grep --color -n'
-alias dc='docker-compose'
-
 # Added by OrbStack: command-line tools and integration
 source ~/.orbstack/shell/init.zsh 2>/dev/null || :
 
-# python setup
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-command -v pyenv >/dev/null || eval "$(pyenv init -)"
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
-
-# bun completions
-[ -s "/Users/adambachman/.bun/_bun" ] && source "/Users/adambachman/.bun/_bun"
+# brew install zsh-syntax-highlighting
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+## uncomment to enable zsh profiling (see top of file)
+# zprof
