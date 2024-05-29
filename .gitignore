@@ -3,3 +3,4 @@
 .config/zsh/.iterm2
 .config/zsh/.iterm2_shell_integration.zsh
 .config/zsh/.zsh_history
+.config/zsh/.zsh_sessions
