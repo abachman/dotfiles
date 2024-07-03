@@ -12,6 +12,8 @@ defaults write com.apple.finder ShowPathbar -bool true
 # Show Status Bar in Finder
 defaults write com.apple.finder ShowStatusBar -bool true
 
+# Drag anywhere on window holding ctrl + command
+defaults write -g NSWindowShouldDragOnGesture YES
 
 
 #"Disabling system-wide resume"

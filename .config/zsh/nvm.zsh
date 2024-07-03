@@ -35,3 +35,5 @@ nvm-setup() {
   add-zsh-hook chpwd load-nvmrc
   load-nvmrc
 }
+
+alias nv=nvm-setup
