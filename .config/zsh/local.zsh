@@ -19,3 +19,6 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 export CLOUDSDK_PYTHON=$PYENV_ROOT/shims/python
 if [ -f "$GCLOUD_SDK/path.zsh.inc" ]; then . "$GCLOUD_SDK/path.zsh.inc"; fi
 if [ -f "$GCLOUD_SDK/completion.zsh.inc" ]; then . "$GCLOUD_SDK/completion.zsh.inc"; fi
+
+# z command, a smart cd replacement: https://github.com/ajeetdsouza/zoxide
+eval "$(zoxide init zsh)"

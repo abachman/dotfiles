@@ -52,6 +52,13 @@ for config in ${config_files[@]}; do
   fi
 done
 
+# History
+HISTFILE=~/.config/zsh/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
+
+
 # Preferred editor
 export EDITOR=nvim
 

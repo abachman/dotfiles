@@ -36,4 +36,4 @@ nvm-setup() {
   load-nvmrc
 }
 
-alias nv=nvm-setup
+# nvm-setup
