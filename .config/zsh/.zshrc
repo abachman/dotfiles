@@ -72,3 +72,5 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ## uncomment to enable zsh profiling (see top of file)
 # zprof
+# bun completions
+[ -s "/Users/adambachman/.bun/_bun" ] && source "/Users/adambachman/.bun/_bun"
