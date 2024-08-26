@@ -11,6 +11,7 @@ export NVM_DIR="$HOME/.nvm"
 
 # personal bin dir
 export PATH="$BUN_INSTALL/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # dotfiles
 export PATH=$HOME/projects/dotfiles/bin:$PATH
@@ -29,4 +30,10 @@ eval "$(pyenv virtualenv-init -)"
 
 # don't need to navigate to ~/ to cd into Downloads, etc.
 export CDPATH=".:$HOME:$HOME/projects"
+
+
+# iterm2 compatible keyboard controls
+bindkey -e
+bindkey '\e\e[C' forward-word
+bindkey '\e\e[D' backward-word 
 

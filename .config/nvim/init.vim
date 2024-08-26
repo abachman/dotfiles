@@ -3,21 +3,27 @@ filetype plugin indent on
 syntax enable
 
 call plug#begin()
+  Plug 'nvim-lua/plenary.nvim'
+
   Plug 'nvim-treesitter/nvim-treesitter'
   Plug 'neovim/nvim-lspconfig'
   Plug 'abachman/neoformat', { 'branch': 'add-biome-format' }
-  Plug 'github/copilot.vim'
+
+  " Plug 'github/copilot.vim'
+  Plug 'sourcegraph/sg.nvim', { 'do': 'nvim -l build/init.lua' }
 
   Plug 'preservim/nerdtree'
+
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
+
   Plug 'jlanzarotta/bufexplorer'
   Plug 'qpkorr/vim-bufkill'
   if has("linux")
     Plug 'windwp/nvim-projectconfig'
   endif
-  Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-commentary'
+  Plug 'tpope/vim-fugitive'   " git
+  Plug 'tpope/vim-commentary' " commenting
   Plug 'tpope/vim-surround'
   Plug 'mustache/vim-mustache-handlebars'
   Plug 'godlygeek/tabular'
@@ -195,7 +201,11 @@ let g:neoformat_enabled_ruby = ['standard']
 " lsp configuration
 " https://github.com/neovim/nvim-lspconfig#Suggested-configuration
 lua require('init-lsp')
- 
+
+" sourcegraph cody setup
+" https://sourcegraph.com/docs/cody/clients/install-neovim
+lua require('sg').setup()
+
 " pencil
 augroup pencil
  autocmd!
@@ -215,7 +225,7 @@ let g:pencil#conceallevel = 3
 let g:pencil#concealcursor = 'c'
 let g:pencil#softDetectSample = 20
 let g:pencil#softDetectThreshold = 130
- 
+
 " Python
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
@@ -227,8 +237,8 @@ lua << EOF
   require("zen-mode").setup({
     window = {
       backdrop = 0.95,
-      width = 100, 
-      height = 1, 
+      width = 100,
+      height = 1,
       options = {
         list = true
       },

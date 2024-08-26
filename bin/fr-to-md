@@ -1,0 +1,468 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "logger"
+require "json"
+begin
+  require "nokogiri"
+rescue => e
+  puts "nokogiri is not installed! #{e.message}"
+  puts "run:"
+  puts "  gem install nokogiri"
+  puts
+  exit 1
+end
+
+xml_file_path = ARGV[0]
+xml_file =
+  if xml_file_path.nil?
+    # xml as stdin stream
+    require "stringio"
+    xml = StringIO.new
+    while line = gets
+      xml.write(line)
+    end
+    xml.rewind
+    xml
+  elsif xml_file_path && !File.exist?(xml_file_path)
+    # filename as argument
+    puts "file: #{xml_file_path.inspect} does not exist"
+    exit 1
+  else
+    File.open(xml_file_path, "r")
+  end
+
+# parse and convert Federal Register XML into Markdown
+# From the documentation at: https://github.com/usgpo/bulk-data/blob/main/FR-XML_User-Guide.md
+#                            https://raw.githubusercontent.com/usgpo/bulk-data/main/FR-XML_User-Guide.md
+# 2. Schema Description
+#
+# The schema chosen to represent the Federal Register is a simplified version of
+# the SGML schema that is used as part of the print production process, with
+# some presentation and print specific tags removed or collapsed, and then
+# converted to well-formed XML. This schema was chosen for the following
+# reasons:
+#
+# 1. It is a complete and faithful representation of the Federal Register, which
+# matches most closely to the author's original intent.
+# 2. It describes the data using semantic tags in a way that is appropriate to
+# the Federal Register Domain. For example, <RULE>, <NOTICE>, and <AGENCY> are
+# all tags in this schema.
+# 3. It fully describes the structure of the Federal Register, including the
+# large structure (parts, articles, corrections, table of contents, etc.), the
+# document structure (titles, paragraphs, sections, etc.), and semantic
+# structure (CFR references, agency names, contact information, amendment text,
+# etc.)
+#
+# Since the schema is not an authoring schema and the SGML to XML conversion
+# process maintains the order of the tags, this allows the XML schema to be more
+# permissive than if it were used for checking authored content.
+#
+# The schema being produced for this effort describes the data as it actually
+# occurs from the OFR. Documents are not being cleaned up because they do not
+# match the schema; instead, the schema was selectively relaxed. Such an
+# approach maintains 100% fidelity to the original data, and eliminates any
+# errors that might occur in schema interpretation or further data manipulation.
+#
+# The following table lists the SGML tags that were removed or collapsed into a
+# source attribute in the Federal Register XML.
+#
+# | Purposed Fields to be Removed | Fields to be Removed or Collapsed | Description |
+# | --- | --- | --- |
+# | EDITOR | Removed | Used to indicate content editor |
+# | FNC | Removed | Used to generate a new column |
+# | FNEP | Removed | Used to generate a new even page |
+# | FNOP | Removed | Used to generate a new odd page. |
+# | FNP | Removed | Force new page. |
+# | Q | Removed | Inserts vertical spaces |
+# | NPAR | Collapse to P | Used to generate a new paragraph where the <P> tag would create a run in entry. |
+# | P | Collapse to P | Normally used for paragraph.  A paragraph here has the first line indented. |
+# | P1 | Collapse to P | Paragraph, indented one em on left. |
+# | P-1 | Collapse to P | Paragraph, turnovers indented one extra em on left. |
+# | P1-3 | Collapse to P | Paragraph, indented one em on left, turnovers indented three ems on left. |
+# | P2 | Collapse to P | Paragraph, indented two ems on left. |
+# | P-2 | Collapse to P | Paragraph, turnovers indented two ems on left.  Same as FP1-2, which should not be used. |
+# | P2-4 | Collapse to P | Paragraph, indented two ems on left, turnovers indented four  ems on left. |
+# | P-3 | Collapse to P | Paragraph, turnovers indented three ems on left. |
+# | P-DASH | Collapse to P | Paragraph, the last line of which fills with low-line dashes |
+# | OLNOTE1 | Collapse to OLNOTE1 | Sets footnote for first overlay note |
+# | OLNOTE2 | Collapse to OLNOTE1 | Sets footnote for second overlay note. |
+# | OLNOTE3 | Collapse to OLNOTE1 | Sets footnote for third overlay note. |
+# | OLNOTE4 | Collapse to OLNOTE1 | Sets footnote for fourth overlay note. |
+# | OLNOTE5 | Collapse to OLNOTE1 | Sets footnote for fifth overlay note. |
+# | OLNOTE6 | Collapse to OLNOTE1 | Sets footnote for sixth overlay note. |
+# | FP | Collapse to FP | Flush paragraph |
+# | FP1 | Collapse to FP | Flush paragraph, all lines indented one em. |
+# | FP-1 | Collapse to FP | Flush paragraph, turnovers indented one em |
+# | FP1-2 | Collapse to FP | Paragraph, first line indented one em and turnovers indented  two ems |
+# | FP2 | Collapse to FP | Flush paragraph, all lines indented two ems |
+# | FP-2 | Collapse to FP | Flush paragraph, turnovers indented two ems |
+# | FP2-2 | Collapse to FP | Flush paragraph, all lines indented two ems. |
+# | FP2-3 | Collapse to FP | Paragraph, first line indented two ems and turnovers indented three ems |
+# | FP3 | Collapse to FP | Flush paragraph, all lines indented three ems. |
+# | FP-DASH | Collapse to FP | Flush line that fills with low-line dashes. |
+# | FRP | Collapse to FP | Flush right material, actually held in 1 em from right margin |
+# | FRP0 | Collapse to FP | True flush right material |
+# | HD | Collapse to HD | First level head in the following sections. |
+# | HD1 | Collapse to HD | First level head in the following sections. |
+# | HD2 | Collapse to HD | Second level head in the following sections. |
+# | HD3 | Collapse to HD | Third level head in the following sections. |
+# | HD4 | Collapse to HD | Fourth level head in the following sections. |
+# | HD5 | Collapse to HD | Fifth level head in the following sections. |
+# | HD6 | Collapse to HD | Sixth level head in the following sections. |
+# | HD8 | Collapse to HD | Lowest level head in the following sections. |
+# | HED | Collapse to HD | The first head in the following sections.   |
+# | HED1 | Collapse to HD | Special first level head in text of Section. |
+# | THED       | Collapse to HD | Head that turns sideways on the page. |
+# | TSECT | Collapse to HD | Section head that turns sideways on the page.   |
+# | FNC | Removed | Used to generate a new column |
+#
+# ## 2.1. Sections Available in XML
+#
+# The following are currently available in Federal Register XML:
+#
+# - .Contents
+# - .Rules and Regulations
+# - .Proposed Rules
+# - .Notices
+# - .Corrections
+#
+# The following are not currently available in Federal Register XML:
+#
+# - .Front Matter (e.g. cover page)
+# - .CFR Parts Affected
+# - .Reader Aids
+# - .CFR Checklist
+# - .CFR Issuances
+# - .Table of Effective Dates
+# - .Graphics
+#
+# ## 2.2. Sections, Parts, and Articles
+#
+# This section describes the top-level structure of a Federal Register XML file.
+#
+# The XML schema, being a translated reproduction of the SGML schema, contains
+# tags and content in the same order as they appear in the printed document.
+# Major sections are grouped appropriately (<CNTNTS>, <RULES>, <PRORULES>,
+# <NOTICES>, <NEWPART>, <CORRECT>), and all data and tags are represented – with
+# the exception of the reduced tags from the previous section.
+#
+# The XML tags and their descriptions of the schema above are shown below:
+#
+# | XML Tag | Description |
+# | --- | --- |
+# | FEDREG | The root tag for all document types in Federal Register publications.  This tag includes children such as CNTNTS, RULES, PRORULES, NOTICES, NEWPART.   |
+# | VOL | Contains the volume number for the publication. |
+# | NO | Contains the issue number of the volume. |
+# | UNITNAME | Contains the display name of the unit which follows, for example, "Notices", "Proposed Rules", "Rules", and "Presidential Documents". |
+# | CNTNTS | Contains table of contents pages for the Federal Register. |
+# | RULES | Used to start Rules section of the federal register. RULES may contain at least one <RULE>. |
+# | RULE | Used to start individual Rules in the Rules section. |
+# | PRORULES | Used to start Proposed Rules section of the Federal Register. Should contain at least one <PRORULE>. |
+# | PRORULE | Used to start individual Proposed Rule of the Federal Register. |
+# | NOTICES | Starts Notices section of the Federal Register. Should contain at least one <NOTICE>. |
+# | NOTICE | Start individual Notice within Notices section. |
+#
+# An abbreviated example of the overall section and structure is below:
+#
+# ```
+# <FEDREG>
+#
+#   <VOL>65</VOL>
+#   <NO>21</NO>
+#   <UNITNAME>Contents</UNITNAME>
+#   <CNTNTS>
+#     ... THE CONTENTS OF THE TABLE OF CONTENTS ...
+#   </CNTNTS>
+#   <DATE>Tuesday, February 1, 2000 1-3-00</DATE>
+#   <UNITNAME>Rules and Regulations</UNITNAME>
+#   <RULES>
+#     <RULE>  ... THE CONTENTS OF THE RULE ... </RULE>
+#     .
+#     .
+#     .
+#   </RULES>
+#   <UNITNAME>Proposed Rules</UNITNAME>
+#   <PRORULES>
+#     <PRORULE>  ... THE CONTENTS OF THE PROPOSED RULE ... </PRORULE>
+#     .
+#     .
+#     .
+#   </PRORULES>
+#   <UNITNAME>Notices</UNITNAME>
+#   <NOTICES>
+#     <NOTICE>  ... THE CONTENTS OF THE NOTICE ... </NOTICE>
+#     .
+#     .
+#     .
+#   </NOTICES>
+#   <NEWPART>
+#        ... THE CONTENTS OF THE PART ...
+#   </NEWPART>
+#   .
+#   .
+#   .
+#
+# </FEDREG>
+# ```
+# ...
+#
+## 2.7. Presidential Documents
+#
+# The PRESDOCS tag must have one or more presidential documents which may
+# include determinations, executive orders, memos, notices, or proclamations. A
+# presidential notice, for example, will often have a title and presidential
+# signature associated with it. It may also include the place of issuance which
+# is usually "The White House." These items are always followed by Federal
+# Register doc number, the date filed, and the billing code.
+#
+# The XML tags and their descriptions of the schema above are shown below:
+#
+# | Node | Description |
+# | --- | --- |
+# | PRESDOCS | Used to start presidential documents section of the Federal Register. |
+# | PRESDOCU | Used to start individual Presidential document in the Federal Register. |
+# | PRESDOC | Used to start individual Presidential documents section of the Federal Register. |
+# | PRNOTICE | Notice of the Presidential documents. |
+# | DETERM | Presidential determination in Presidential documents. |
+# | EXECORD | Presidential Executive Order in Presidential documents. |
+# | PRMEMO | Presidential Memo in presidential documents. |
+# | PRORDER | Presidential Order in Presidential documents. |
+# | PNOTICE | Notice in Presidential documents. |
+# | TITLE3 | CFR Title for Presidential documents. |
+# | PSIG | President associated with a Presidential document. |
+# | PLACE | Place of issuance for a Presidential document. |
+# | DATE | Date associated with the Presidential document.   |
+#
+# An abbreviated example of the PRESDOCS section and structure is below:
+#
+# ```
+# <FEDREG>
+# ...
+#   <NEWPART>
+#     <PTITLE>
+#       <PRTPAGE P="47239"/>
+#       <PARTNO>Part IV</PARTNO>
+#       <PRES>The President</PRES>
+#       <PNOTICE>Notice of July 28, 2000—Continuation… </PNOTICE>
+#     </PTITLE>
+#     <PRESDOCS>
+#       <PRESDOCU>
+#         <PRNOTICE>
+#           <TITLE3>Title 3—</TITLE3>
+#           <PRES>The President<PRTPAGE P="47241"/></PRES>
+#           <PNOTICE>Notice of July 28, 2000</PNOTICE>
+#           <HD SOURCE="HED">Continuation of Iraqi Emergency</HD>
+#           <FP>On August 2, 1990, by Executive Order 12722…</FP>
+#           <FP>This notice shall …<E T="04">Federal Register</E>…and…</FP>
+#           <PSIG>wj</PSIG>
+#           <PLACE>THE WHITE HOUSE,</PLACE>
+#           <DATE>July 28, 2000.</DATE>
+#           <FRDOC>[FR Doc. 00-19587</FRDOC>
+#           <FILED>Filed 7-31-00; 8:45 am]</FILED>
+#           <BILCOD>Billing code 3195-01-P</BILCOD>
+#         </PRNOTICE>
+#       </PRESDOCU>
+#     </PRESDOCS>
+#   </NEWPART>
+# ...
+# </FEDREG>
+# ```
+
+class Section
+  attr_reader :children, :parent, :level, :content, :heading
+
+  def initialize(heading:, level: 2, parent: nil)
+    @heading = heading
+    @level = level
+    @parent = parent
+    @children = []
+
+    @parent.children << self if @parent
+    @content = []
+  end
+
+  def identifier
+    # extract numerical identifier from heading
+    heading.match(/\b(\d+[^ ]+?)/)[0]
+  end
+
+  def print_to_md
+    if heading
+      puts
+      puts titleize
+    end
+    puts
+
+    content.each do |paragraph|
+      puts paragraph
+      puts
+    end
+
+    children.each do |subsection|
+      subsection.print_to_md
+    end
+  end
+
+  def add_section(heading)
+    LOGGER.info("[Section#add_section] #{JSON.generate(heading:, level:)}")
+    Section.new(heading: heading, level: level + 1, parent: self)
+  end
+
+  def add_content(text)
+    return if text.nil? || text.empty?
+
+    content << text
+  end
+
+  def titleize
+    LOGGER.info("[titleize] #{JSON.generate(level:, heading:)}")
+    format("%s %s", ("#" * level), heading)
+  end
+
+  def empty?
+    children.empty?
+  end
+end
+
+class Document
+  attr_accessor :date, :identifier
+  attr_reader :children
+
+  def initialize
+    @date = nil
+    @identifier = nil
+    @children = []
+  end
+
+  def print_to_md
+    puts format("_%s_", @identifier)
+    puts
+
+    @children.each do |section|
+      section.print_to_md
+    end
+  end
+
+  def start_document(title)
+    Section.new(heading: title, level: 1, parent: self)
+  end
+
+  def add_section(heading, level: 2)
+    LOGGER.info("[Document#add_section] #{JSON.generate(heading:, level:)}")
+    Section.new(heading:, level:, parent: self)
+  end
+
+  def empty?
+    children.empty?
+  end
+end
+
+document = Document.new
+xml = Nokogiri::XML.parse(xml_file, &:noblanks)
+LOGGER = Logger.new(File.open("parser.log", "w"))
+
+# binding.irb
+
+def collapsed(text)
+  if text.is_a?(Array)
+    text = text.join(" ")
+  end
+  text.strip.gsub(/[[:space:]]+/, " ")
+end
+
+# @returns [ id, level ] = [ string | nil, integer | nil ]
+def get_section_id(text)
+  return [nil, nil] unless text =~ /\b(\d+([^ ]+)?)/
+
+  id = $1.gsub(/(^\.|\.$)/, "")
+
+  [id, id.split(".").size]
+end
+
+#
+# @returns [ heading, [id, level] ] = [ string | nil, ReturnType<get_section_id> ]
+def extract_heading(node)
+  # a <FP> tag may include multiple <E> tags, which should be joined with a - to
+  # create a new section heading
+  heading = node.children
+    .select { |child| child.name == "E" }
+    .map { |heading| heading.content }.join(" - ")
+
+  if heading.nil? || heading.empty?
+    [nil, []]
+  elsif heading.match?(/^et seq/)
+    [nil, []]
+  else
+    heading = collapsed(heading)
+    LOGGER.info(JSON.generate(heading:, section_id: get_section_id(heading)))
+    [heading, get_section_id(heading)]
+  end
+end
+
+# sections with <E> heading tags should have the headings stripped to get actual
+# text paragraph content
+def without_heading(node)
+  node.children
+    .select { _1.name == "text" } # bare Text nodes
+    .map(&:text)
+    .map(&:strip)
+    .filter { |paragraph| !paragraph.empty? && paragraph != "." }
+end
+
+# descend until <EXECORD> tag is found
+def starting_node(node)
+  if node.name == "EXECORD"
+    node
+  else
+    starting_node(node.children.first)
+  end
+end
+
+def parse_and_build(node, document, level = 1)
+  section = nil
+
+  # the children of a <EXECORD> tag are flat
+  node.children.each do |child|
+    if document.identifier.nil? && child.name == "EXECORDR"
+      # collect <EXECORDR></EXECORDR> as identifier
+      document.identifier = child.content.strip
+      next
+    end
+
+    if document.empty? && child.name == "HD"
+      # collect <HD SOURCE="HED"></HD> as title
+      section = document.start_document(child.content.strip)
+      next
+    end
+
+    case child.name
+    when "FP", "P"
+      heading, section_id = extract_heading(child)
+      if heading
+        if section_id[1]
+          section = document.add_section(heading, level: section_id[1] + 1)
+        else
+          raise "Section with heading: #{heading.inspect} found, but no section created for section_id: #{section_id.inspect}"
+        end
+      end
+      section.add_content collapsed(without_heading(child))
+    when "DATE"
+      document.date = collapsed(child.text)
+      # else
+      #   puts "<!-- unrecognized tag: #{child.inspect} -->"
+    end
+  end
+end
+
+#
+# <PRESDOCU>
+#   <EXECORD>
+#     ... actual stuff
+#
+parse_and_build(
+  starting_node(xml.root),
+  document
+)
+
+document.print_to_md
