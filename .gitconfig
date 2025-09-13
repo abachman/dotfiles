@@ -17,6 +17,7 @@
   praise = blame
   lol = log --pretty=oneline --abbrev-commit --graph --decorate
   puff = push --force-with-lease
+  cano = commit --amend --no-edit
 [user]
   name = Adam Bachman
   email = adam.bachman@gmail.com

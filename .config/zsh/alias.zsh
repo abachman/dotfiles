@@ -1,6 +1,7 @@
 # commands
 alias code.="code ."
 alias b="bundle exec"
+alias bs="bundle exec rspec"
 alias ls='ls -G'
 alias dir='ls -G --format=vertical'
 alias rgrep='rgrep --color -n'

@@ -21,6 +21,10 @@ antidote load
 
 autoload -Uz promptinit && promptinit && prompt powerlevel10k
 
+# additional zsh completions
+fpath+=${ZDOTDIR}/zfunc
+autoload -Uz compinit && compinit
+
 # To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
 [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
 
@@ -32,12 +36,6 @@ eval "$(fzf --zsh)"
 
 # ruby env, rbenv: brew install rbenv ruby-build
 eval "$(rbenv init - zsh)"
-
-# # python setup: brew install pyenv pyenv-virtualenv
-# export PYENV_ROOT="$HOME/.pyenv"
-# [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
 
 config_files=(
   "$HOME/.config/zsh/alias.zsh"
@@ -72,5 +70,3 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 ## uncomment to enable zsh profiling (see top of file)
 # zprof
-# bun completions
-[ -s "/Users/adambachman/.bun/_bun" ] && source "/Users/adambachman/.bun/_bun"

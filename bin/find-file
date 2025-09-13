@@ -1,1 +1,25 @@
-find . -type f -name "*$1*"
+#!/usr/bin/env ruby
+
+require 'shellwords'
+
+# add an optparse argument to handle --exclude directories, it should accept it multiple times
+require 'optparse'
+exclude_dirs = []
+OptionParser.new do |opts|
+  opts.on("-eDIR", "--exclude DIR", String, "Exclude a directory from search") do |dir|
+    exclude_dirs << "grep -v '#{dir}'"
+  end
+end.parse!
+
+pattern = ARGV[0]
+exit(1) if pattern.nil? || pattern.empty?
+
+escaped_pattern = Shellwords.escape(pattern)
+command = "find . -type f -name \"*#{escaped_pattern}*\""
+
+if exclude_dirs.any?
+  command = ([command] + exclude_dirs).join(' | ')
+end
+
+puts("\e[2m> #{command}\e[0m")
+system(command)

@@ -1,8 +1,15 @@
 # .zsh_plugins.txt
+#
 # https://getantidote.github.io/install
+# 
+# after updating, re-source .zshrc or open a new shell
+#
 
 # prompts:
 #   with prompt plugins, remember to add this to your .zshrc:
 #   `autoload -Uz promptinit && promptinit && prompt pure`
 # sindresorhus/pure     kind:fpath
 romkatv/powerlevel10k kind:fpath
+
+zsh-users/zsh-completions kind:fpath path:src
+
